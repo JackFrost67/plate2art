@@ -2,33 +2,29 @@
 # Run once or you will mess up everything
 # Dataset used: https://www.kaggle.com/c/painter-by-numbers zipfile: train2.zip
 
-import numpy as np
 import csv
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.ticker import PercentFormatter
+import argparse
+import cv2
 
-current_directory =  os.path.dirname(__file__)
-csv_file_path = os.path.join(current_directory, 'train_info.csv')
-path = current_directory + "/img/"
-
-with open(csv_file_path, 'r') as file:
+def preprocessing():
     lines = csv.reader(file, delimiter = ',')
     lines_list = list(lines)
-    lines_list = [line for line in lines_list[1:] if os.path.exists(path + line[0])]
-
+    lines_list = [line for line in lines_list[1:] if os.path.exists(os.path.join(path, line[0]))]
+    
     # getting unclassified data filename
     unknown_file = [row[0] for row in lines_list[1:] if not len(row[3])]
     
     # deleting unclassified data
     for img in unknown_file:
-        filename = current_directory + "/img/" + img
+        filename = os.path.join(path, img)
         if os.path.exists(filename):
             os.remove(filename)
 
     # get genre for each filename 
-    labels_list = [row[3] for row in lines_list[1:] if len(row[3])]
+    labels_list = [row[3].split(',', 1)[0] for row in lines_list[1:] if len(row[3])]
     series = pd.Series(list(labels_list), dtype = "category")
 
     # array for info about the distribution of data in the dataset
@@ -36,24 +32,62 @@ with open(csv_file_path, 'r') as file:
     counter = list()
 
     # rename each file labeling the filename with the map of the category
-    for code, category in enumerate(series.cat.categories):
-        filenames = [row[0] for row in lines_list[1:] if row[3] == category and os.path.exists(path + row[0])]
-        
-        print("Code: ", code)
-        print("Category: ", category)
-    
-        for index, filename in enumerate(filenames):
-            if os.path.exists(path + filename):
-                os.rename(path + filename, path + str(code) + str(index) + ".jpg")
+    category_counter = 0   
+    category_list = []           
+    with open("info.txt", "w") as info_file:
+        info_file.write("Code & Category\n")
+        for category in series.cat.categories:
+            filenames = [row[0] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
 
-        counter.append(len(filenames))
-    
-    fig, axs = plt.subplots()
-    axs.barh(categories, counter)
-    axs.invert_yaxis() 
-    plt.yticks(fontsize = 6)
-    axs.set_xlabel('Number of occurencies')
-    axs.set_title('Is dataset balanced?')
-    plt.show()
+            if (len(filenames) >= args.number):
+                category_counter += 1
+                category_list.append(category)
+                info_file.write(str(category_counter) + "\t" + category + "\n")
+                fix_index = 0 # add 1 if im.read throw an exception so we can remove it from the counted images
+                for index, filename in enumerate(filenames):
+                    if os.path.exists(os.path.join(path, filename)) and index - fix_index <= args.number:
+                        with open(os.path.join(path, filename), 'rb') as f:
+                            check_chars = f.read()[-2:]
+                            if (check_chars == b'\xff\xd9'):
+                                im = cv2.imread(os.path.join(path, filename))
+                                width = int(im.shape[1] * args.scaleratio)
+                                height = int(im.shape[0] * args.scaleratio)
+                                dim = (width, height)
+                                renamed_path = current_directory + "/" + args.destination + "/" + str(category_counter) + str(index - fix_index) + ".jpg"
+                                cv2.imwrite(renamed_path, cv2.resize(im, dim, interpolation=cv2.INTER_AREA))
+                            else:
+                                fix_index += 1
+                    else:
+                        break
 
-    print("\nNumber of class: ", len(series.cat.categories))
+                counter.append(len(filenames))
+    
+    if(args.plot_flag):
+        fig, axs = plt.subplots()
+        axs.barh(category_list, counter)
+        axs.invert_yaxis() 
+        plt.yticks(fontsize = 6) # TODO: make the font dynamic
+        axs.set_xlabel('Number of occurencies')
+        axs.set_title('Is dataset balanced?')
+        plt.show()
+
+    print("Number of class: ", category_counter)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--plot", dest="plot_flag", action='store_true', help="Show plot for data distribution")
+    parser.add_argument("-d", "--directory", dest="directory", default=os.path.dirname(__file__), help="Directory where dataset is putted", type=str)
+    parser.add_argument("-c", "--csvname", dest="csvname", default="train_info.csv", help="Name of the csv filena", type=str)
+    parser.add_argument("-i", "--imgfolder", dest="imgfolder", default="img", help="Folder where images is putted", type=str)
+    parser.add_argument("-n", "--number", dest="number", default=500, help="How many elements for class to take")
+    parser.add_argument("-r", "--ratio", dest="scaleratio", default=1.0, help="Scale ratio to reduce the dimension of the dataset")
+    parser.add_argument("-f", "--folderdest", dest="destination", default="img", help="Destination directory for the images", type=str)
+
+    args = parser.parse_args()
+
+    current_directory = args.directory  
+    csv_file_path = os.path.join(current_directory, args.csvname)
+    path = os.path.join(current_directory, args.imgfolder)
+
+    with open(csv_file_path, 'r') as file:
+        preprocessing()

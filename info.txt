@@ -1,254 +1,28 @@
-Code:  0
-Category:  Abstract Art
-Code:  1
-Category:  Abstract Expressionism
-Code:  2
-Category:  Academicism
-Code:  3
-Category:  Action painting
-Code:  4
-Category:  American Realism
-Code:  5
-Category:  Analytical Cubism
-Code:  6
-Category:  Analytical Realism
-Code:  7
-Category:  Art Brut
-Code:  8
-Category:  Art Deco
-Code:  9
-Category:  Art Informel
-Code:  10
-Category:  Art Nouveau (Modern)
-Code:  11
-Category:  Automatic Painting
-Code:  12
-Category:  Baroque
-Code:  13
-Category:  Biedermeier
-Code:  14
-Category:  Byzantine
-Code:  15
-Category:  Cartographic Art
-Code:  16
-Category:  Classicism
-Code:  17
-Category:  Cloisonnism
-Code:  18
-Category:  Color Field Painting
-Code:  19
-Category:  Conceptual Art
-Code:  20
-Category:  Concretism
-Code:  21
-Category:  Constructivism
-Code:  22
-Category:  Contemporary Realism
-Code:  23
-Category:  Costumbrismo
-Code:  24
-Category:  Cubism
-Code:  25
-Category:  Cubo-Expressionism
-Code:  26
-Category:  Cubo-Futurism
-Code:  27
-Category:  Dada
-Code:  28
-Category:  Divisionism
-Code:  29
-Category:  Early Renaissance
-Code:  30
-Category:  Existential Art
-Code:  31
-Category:  Expressionism
-Code:  32
-Category:  Fantastic Realism
-Code:  33
-Category:  Fauvism
-Code:  34
-Category:  Feminist Art
-Code:  35
-Category:  Figurative Expressionism
-Code:  36
-Category:  Futurism
-Code:  37
-Category:  Gongbi
-Code:  38
-Category:  Gothic
-Code:  39
-Category:  Hard Edge Painting
-Code:  40
-Category:  High Renaissance
-Code:  41
-Category:  Hyper-Realism
-Code:  42
-Category:  Impressionism
-Code:  43
-Category:  Indian Space painting
-Code:  44
-Category:  Ink and wash painting
-Code:  45
-Category:  International Gothic
-Code:  46
-Category:  Intimism
-Code:  47
-Category:  Japonism
-Code:  48
-Category:  Kitsch
-Code:  49
-Category:  Lettrism
-Code:  50
-Category:  Luminism
-Code:  51
-Category:  Lyrical Abstraction
-Code:  52
-Category:  Magic Realism
-Code:  53
-Category:  Mail Art
-Code:  54
-Category:  Mannerism (Late Renaissance)
-Code:  55
-Category:  Mechanistic Cubism
-Code:  56
-Category:  Metaphysical art
-Code:  57
-Category:  Minimalism
-Code:  58
-Category:  Miserablism
-Code:  59
-Category:  Modernismo
-Code:  60
-Category:  Mosan art
-Code:  61
-Category:  Muralism
-Code:  62
-Category:  Nanga (Bunjinga)
-Code:  63
-Category:  Nas-Taliq
-Code:  64
-Category:  Native Art
-Code:  65
-Category:  Naturalism
-Code:  66
-Category:  Naïve Art (Primitivism)
-Code:  67
-Category:  Neo-Byzantine
-Code:  68
-Category:  Neo-Concretism
-Code:  69
-Category:  Neo-Dada
-Code:  70
-Category:  Neo-Expressionism
-Code:  71
-Category:  Neo-Figurative Art
-Code:  72
-Category:  Neo-Rococo
-Code:  73
-Category:  Neo-Romanticism
-Code:  74
-Category:  Neo-baroque
-Code:  75
-Category:  Neoclassicism
-Code:  76
-Category:  Neoplasticism
-Code:  77
-Category:  New Casualism
-Code:  78
-Category:  New Realism
-Code:  79
-Category:  Nihonga
-Code:  80
-Category:  Northern Renaissance
-Code:  81
-Category:  Nouveau Réalisme
-Code:  82
-Category:  Op Art
-Code:  83
-Category:  Orientalism
-Code:  84
-Category:  Orphism
-Code:  85
-Category:  Ottoman Period
-Code:  86
-Category:  Outsider art
-Code:  87
-Category:  Photorealism
-Code:  88
-Category:  Pointillism
-Code:  89
-Category:  Pop Art
-Code:  90
-Category:  Post-Impressionism
-Code:  91
-Category:  Post-Minimalism
-Code:  92
-Category:  Post-Painterly Abstraction
-Code:  93
-Category:  Poster Art Realism
-Code:  94
-Category:  Precisionism
-Code:  95
-Category:  Primitivism
-Code:  96
-Category:  Proto Renaissance
-Code:  97
-Category:  Purism
-Code:  98
-Category:  Realism
-Code:  99
-Category:  Regionalism
-Code:  100
-Category:  Rococo
-Code:  101
-Category:  Romanesque
-Code:  102
-Category:  Romanticism
-Code:  103
-Category:  Safavid Period
-Code:  104
-Category:  Shin-hanga
-Code:  105
-Category:  Social Realism
-Code:  106
-Category:  Socialist Realism
-Code:  107
-Category:  Spatialism
-Code:  108
-Category:  Spectralism
-Code:  109
-Category:  Street art
-Code:  110
-Category:  Suprematism
-Code:  111
-Category:  Surrealism
-Code:  112
-Category:  Symbolism
-Code:  113
-Category:  Synchromism
-Code:  114
-Category:  Synthetic Cubism
-Code:  115
-Category:  Synthetism
-Code:  116
-Category:  Sōsaku hanga
-Code:  117
-Category:  Tachisme
-Code:  118
-Category:  Tenebrism
-Code:  119
-Category:  Timurid Period
-Code:  120
-Category:  Tonalism
-Code:  121
-Category:  Transautomatism
-Code:  122
-Category:  Tubism
-Code:  123
-Category:  Ukiyo-e
-Code:  124
-Category:  Verism
-Code:  125
-Category:  Yamato-e
-Code:  126
-Category:  Zen
+Code & Category
+1	Abstract Art
+2	Abstract Expressionism
+3	Academicism
+4	Art Deco
+5	Art Informel
+6	Art Nouveau (Modern)
+7	Baroque
+8	Color Field Painting
+9	Cubism
+10	Early Renaissance
+11	Expressionism
+12	Fauvism
+13	High Renaissance
+14	Impressionism
+15	Magic Realism
+16	Mannerism (Late Renaissance)
+17	Naïve Art (Primitivism)
+18	Neoclassicism
+19	Northern Renaissance
+20	Pop Art
+21	Post-Impressionism
+22	Realism
+23	Rococo
+24	Romanticism
+25	Surrealism
+26	Symbolism
+27	Ukiyo-e
