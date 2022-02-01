@@ -1,6 +1,9 @@
 % Fine tunning of the NN for art classification
 
+%choice for the neural network to use for fine tuning
 net = alexnet;
+
+%visualize the NN
 analyzeNetwork(net);
 
 %% Get the input size
@@ -10,10 +13,10 @@ sz = net.Layers(1).InputSize;
 %% Get the layer for cutting
 layersTransfer = net.Layers(1 : end - 3);
 
-% freezing of the weights
+% freezing of the weights (uncomment this to freeze the layers weights before cutting, otherwise the full NN will be trained)
 % layersTransfer = freezeWeights(layersTransfer);
 
-%% replace layers
+%% Add layers after cutting for the wanted classification task
 numClasses = 127;
 layers = [
     layersTransfer
@@ -22,6 +25,7 @@ layers = [
     classificationLayer];
 
 %% data preparation
+%% TODO aggiustare per il nostro dataset la gestione della classe
 imds = imageDatastore('img/');
 labels = [];
 for ii = 1 : size(imds.Files, 1)
@@ -34,12 +38,11 @@ end
 labels = categorical(labels);
 imds = imageDatastore('img/', 'labels', labels);
 
-%% divisione train-test
+%% train-test split
 
 [imdsTrain, imdsTest] = splitEachLabel(imds, 0.7, 'randomized');
 
 %% data augmentation
-
 pixelRange = [-5 5];
 scaleRange = [0.9 1.1];
 
@@ -47,13 +50,12 @@ imageAugmenter = imageDataAugmenter(...
     'RandXReflection', true, ...
     'RandXTranslation', pixelRange, ...
     'RandYTranslation', pixelRange, ...
-    'RandScale', scaleRange); %<-- todo posso fare robe extra
+    'RandScale', scaleRange);
 
 augImdsTrain = augmentedImageDatastore(sz(1 : 2), imdsTrain, 'DataAugmentation', imageAugmenter);
 augImdsTest = augmentedImageDatastore(sz(1 : 2), imdsTest);
 
-%% configurazione fine tuning
-
+%% fine tuning train config
 options = trainingOptions('sgdm', ...
     'MiniBatchSize', 10, ...
     'MaxEpochs', 6, ...
@@ -67,5 +69,6 @@ options = trainingOptions('sgdm', ...
 %% training
 netTransfer = trainNetwork(augImdsTrain, layers, options);
 
+%% test
 [lab_pred_te, scores] = classify(netTransfer, augImdsTest);
 acc = numel(find(lab_pred_te == imdsTest.Labels)) / numel(lab_pred_te);
