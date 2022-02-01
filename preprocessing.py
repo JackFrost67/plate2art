@@ -45,15 +45,15 @@ def preprocessing():
                 info_file.write(str(category_counter) + "\t" + category + "\n")
                 fix_index = 0 # add 1 if im.read throw an exception so we can remove it from the counted images
                 for index, filename in enumerate(filenames):
-                    if os.path.exists(os.path.join(path, filename)) and index - fix_index <= args.number:
+                    if os.path.exists(os.path.join(path, filename)) and index - fix_index < args.number:
                         with open(os.path.join(path, filename), 'rb') as f:
                             check_chars = f.read()[-2:]
                             if (check_chars == b'\xff\xd9'):
                                 im = cv2.imread(os.path.join(path, filename))
-                                width = int(im.shape[1] * args.scaleratio)
-                                height = int(im.shape[0] * args.scaleratio)
+                                width = int(args.scaleratio * im.shape[1])
+                                height = int(args.scaleratio * im.shape[0])
                                 dim = (width, height)
-                                renamed_path = current_directory + "/" + args.destination + "/" + str(category_counter) + str(index - fix_index) + ".jpg"
+                                renamed_path = current_directory + "/" + args.destination + "/" + str(category_counter) + "_" + str(index - fix_index) + ".jpg"
                                 cv2.imwrite(renamed_path, cv2.resize(im, dim, interpolation=cv2.INTER_AREA))
                             else:
                                 fix_index += 1
@@ -79,8 +79,8 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--directory", dest="directory", default=os.path.dirname(__file__), help="Directory where dataset is putted", type=str)
     parser.add_argument("-c", "--csvname", dest="csvname", default="train_info.csv", help="Name of the csv filena", type=str)
     parser.add_argument("-i", "--imgfolder", dest="imgfolder", default="img", help="Folder where images is putted", type=str)
-    parser.add_argument("-n", "--number", dest="number", default=500, help="How many elements for class to take")
-    parser.add_argument("-r", "--ratio", dest="scaleratio", default=1.0, help="Scale ratio to reduce the dimension of the dataset")
+    parser.add_argument("-n", "--number", dest="number", default=500, help="How many elements for class to take", type=int)
+    parser.add_argument("-r", "--ratio", dest="scaleratio", default=1.0, help="Scale ratio to reduce the dimension of the dataset", type=float)
     parser.add_argument("-f", "--folderdest", dest="destination", default="img", help="Destination directory for the images", type=str)
 
     args = parser.parse_args()

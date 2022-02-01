@@ -8,6 +8,7 @@ analyzeNetwork(net);
 
 %% Get the input size
 % efficientnetb0 need image in format 224x224 
+% alexnet need image in format 227x227
 sz = net.Layers(1).InputSize;
 
 %% Get the layer for cutting
@@ -17,29 +18,28 @@ layersTransfer = net.Layers(1 : end - 3);
 % layersTransfer = freezeWeights(layersTransfer);
 
 %% Add layers after cutting for the wanted classification task
-numClasses = 127;
+numClasses = 27;
 layers = [
     layersTransfer
     fullyConnectedLayer(numClasses, 'WeightLearnRateFactor', 20, 'BiasLearnRateFactor', 20)
     softmaxLayer
     classificationLayer];
 
-%% data preparation
+%% Data preparation
 %% TODO aggiustare per il nostro dataset la gestione della classe
 imds = imageDatastore('img/');
 labels = [];
 for ii = 1 : size(imds.Files, 1)
     name = imds.Files{ii, 1};
     [p, n, ex] = fileparts(name);
-    class = floor(str2double(n) / 100);
-    labels = [labels; class];
+    class = floor(str2double(split(n, "_")));
+    labels = [labels; class(1)];
 end
 
 labels = categorical(labels);
 imds = imageDatastore('img/', 'labels', labels);
 
 %% train-test split
-
 [imdsTrain, imdsTest] = splitEachLabel(imds, 0.7, 'randomized');
 
 %% data augmentation
