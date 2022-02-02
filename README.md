@@ -4,9 +4,12 @@ Dal piatto all'arte
 Progetto relativo al corso di Visual Information Processing and Management anno 2021/2022.
 
 ## TODO: 
+  - Bot:
+    - [x] Image quality
+    - [ ] Similarity
   - Riconoscimento immagini di bassa qualità:
-    - [ ] immagini sfocate
-    - [ ] immagini sovraesposte/sottoesposte
+    - [x] immagini sfocate/rumorose -> PIQE
+    - [x] immagini sovraesposte/sottoesposte -> media luminanza
   - Segmentazione:
     - [ ] Trovare piatto / riconoscere se non è presente il piatto
   - Classificazione:
