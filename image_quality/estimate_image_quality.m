@@ -7,9 +7,9 @@ function estimate_image_quality(fn)
 
     txt = "";
     % brightness estimation
-    if brightness > 210
+    if brightness > 200
         txt = txt + "Image brightness: too bright \n";
-    elseif brightness < 30
+    elseif brightness < 50
         txt = txt + "Image brightness: too dark \n";
     else
         txt = txt + "Image brightness: ok \n";

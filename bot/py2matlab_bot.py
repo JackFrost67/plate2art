@@ -1,3 +1,4 @@
+from threading import local
 from Updater import Updater
 import os, sys, platform, subprocess
 
@@ -11,6 +12,16 @@ def imageHandler(bot, message, chat_id, local_filename):
 	print(local_filename)
 	# send message to user
 	bot.sendMessage(chat_id, "Hi, please wait until the image is ready")
+
+	# check if image contains food
+	food_found = yolo_food_detection.load_image_food(local_filename)
+	if (food_found == True):
+		dirName, fileBaseName, fileExtension = fileparts(local_filename)
+		fn = os.path.join(dirName, fileBaseName  + '.jpg')	
+		bot.sendImage(chat_id, fn, "Food found, using bbox to process the image")
+	else:
+		bot.sendMessage(chat_id, "Food not found, using whole image")
+
 	# set matlab command
 	if 'Linux' in platform.system():
 		matlab_cmd = 'matlab'
@@ -31,11 +42,15 @@ def imageHandler(bot, message, chat_id, local_filename):
 
 	bot.sendMessage(chat_id, quality_txt)
 
+	#TODO similarity
 	#bot.sendImage(chat_id, new_fn, "")
 
 
 if __name__ == "__main__":
 	bot_id = '5170348617:AAG9_rEg8xFXHhHew-cXcUS2vN94TuuRaTE'
+	sys.path.append('../segmentation')
+	import yolo_food_detection
+
 	updater = Updater(bot_id)
 	updater.setPhotoHandler(imageHandler)
 	updater.start()
