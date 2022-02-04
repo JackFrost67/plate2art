@@ -1,7 +1,7 @@
 # YOLO object detection
 import cv2 as cv
 import numpy as np
-import time
+import time, os
 
 def load_image_food(path):
     
@@ -11,12 +11,16 @@ def load_image_food(path):
     outputs = None
 
     # Load names of classes and get random colors
-    classes = open('food100.names').read().strip().split('\n')
+    folder = os.path.dirname(__file__)
+    names = os.path.join(folder, 'food100.names')
+    classes = open(names).read().strip().split('\n')
     np.random.seed(42)
     colors = np.random.randint(0, 255, size=(len(classes), 3), dtype='uint8')
 
     # Give the configuration and weight files for the model and load the network.
-    net = cv.dnn.readNetFromDarknet('yolov2-food100.cfg', 'yolov2-food100.weights')
+    cfg = os.path.join(folder, 'yolov2-food100.cfg')
+    weights = os.path.join(folder, 'yolov2-food100.weights')
+    net = cv.dnn.readNetFromDarknet(cfg, weights)
     net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
     # net.setPreferableTarget(cv.dnn.DNN_TARGET_CPU)
 
@@ -39,7 +43,13 @@ def load_image_food(path):
     # medium objects (2028, 85)
     # small objects (8112, 85)
     outputs = np.vstack(outputs)
-    post_process(img, outputs, 0.2, path)
+    file_found = post_process(img, outputs, 0.2, path)
+    return file_found
+
+def fileparts(fn):
+    (dirName, fileName) = os.path.split(fn)
+    (fileBaseName, fileExtension) = os.path.splitext(fileName)
+    return dirName, fileBaseName, fileExtension
 
 def post_process(img, outputs, conf, path):
     H, W = img.shape[:2]
@@ -61,17 +71,22 @@ def post_process(img, outputs, conf, path):
             classIDs.append(classID)
 
     indices = cv.dnn.NMSBoxes(boxes, confidences, conf, conf-0.1)
+    dirName, fileBaseName, fileExtension = fileparts(path)
     if len(indices) > 0:
         print("Food Found")
-        max_box_area = 0;
-        max_box_index = 0;
+        max_box_area = 0 
+        max_box_index = -1
         for i in indices.flatten():
             (w, h) = (boxes[i][2], boxes[i][3])
             area = w*h
             if (area > max_box_area):
                 max_box_index = i
-        
+
         (x, y) = (boxes[max_box_index][0], boxes[max_box_index][1])
         (w, h) = (boxes[max_box_index][2], boxes[max_box_index][3])
-        cibo = img[y:y+h, x:x+w]
-        cv.imwrite('test.jpg', cibo)
+        food_img = img[y:y+h, x:x+w]
+        food_file = os.path.join(dirName, fileBaseName + '.jpg')
+        cv.imwrite(food_file, food_img)
+        return True
+    else:
+        return False
