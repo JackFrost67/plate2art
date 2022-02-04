@@ -38,7 +38,7 @@ lgraph = replaceLayer(lgraph, 'fc1000', layers);
 plot(lgraph)
 
 %% Data preparation
-imds = imageDatastore('img/');
+imds = imageDatastore('../img/');
 labels = [];
 for ii = 1 : size(imds.Files, 1)
     name = imds.Files{ii, 1};
@@ -48,7 +48,7 @@ for ii = 1 : size(imds.Files, 1)
 end
 
 labels = categorical(labels);
-imds = imageDatastore('img/', 'labels', labels);
+imds = imageDatastore('../img/', 'labels', labels);
 
 %% train-test split
 [imdsTrain, imdsTest] = splitEachLabel(imds, 0.7, 'randomized');
@@ -63,8 +63,8 @@ imageAugmenter = imageDataAugmenter(...
     'RandYTranslation', pixelRange, ...
     'RandScale', scaleRange);
 
-augImdsTrain = augmentedImageDatastore(sz(1 : 2), imdsTrain, 'DataAugmentation', imageAugmenter);
-augImdsTest = augmentedImageDatastore(sz(1 : 2), imdsTest);
+augImdsTrain = augmentedImageDatastore(sz, imdsTrain, 'DataAugmentation', imageAugmenter);
+augImdsTest = augmentedImageDatastore(sz, imdsTest);
 
 %% fine tuning train config
 options = trainingOptions('adam', ...
