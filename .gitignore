@@ -1,5 +1,13 @@
+# immagini/dataset
 img/
+img_food/
+img_food_google/
 *.zip
+
+#yolo
+segmentation/food100.names
+segmentation/yolov2-food100.cfg
+segmentation/yolov2-food100.weights
 
 # Windows default autosave extension
 *.asv
