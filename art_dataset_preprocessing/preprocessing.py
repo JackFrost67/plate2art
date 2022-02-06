@@ -1,6 +1,6 @@
 # Preprocessing for dataset
 # Run once or you will mess up everything
-# Dataset used: https://www.kaggle.com/c/painter-by-numbers zipfile: train2.zip
+# Dataset used: https://www.kaggle.com/c/painter-by-numbers zipfile: train.zip
 
 import csv
 import os
@@ -33,7 +33,14 @@ def preprocessing():
 
     # rename each file labeling the filename with the map of the category
     category_counter = 0   
-    category_list = []           
+    category_list = []
+    
+    
+    dest_folder = current_directory + "/" + args.destination
+    print(dest_folder)
+    if not(os.path.exists(dest_folder)):
+        os.mkdir(dest_folder)
+           
     with open("info.txt", "w") as info_file:
         info_file.write("Code & Category\n")
         for category in series.cat.categories:
@@ -50,8 +57,16 @@ def preprocessing():
                             check_chars = f.read()[-2:]
                             if (check_chars == b'\xff\xd9'):
                                 im = cv2.imread(os.path.join(path, filename))
-                                width = int(args.scaleratio * im.shape[1])
-                                height = int(args.scaleratio * im.shape[0])
+                                if im.shape[1] > 500 and im.shape[0] > 500:
+                                    width = int(args.scaleratio * im.shape[1])
+                                    height = int(args.scaleratio * im.shape[0])
+                                elif im.shape[1] < 300 or im.shape[0] < 300:
+                                    width = int(im.shape[1]*1.5)
+                                    height = int(im.shape[0]*1.5)
+                                else: 
+                                    width = im.shape[1]
+                                    height = im.shape[0]
+                                    
                                 dim = (width, height)
                                 renamed_path = current_directory + "/" + args.destination + "/" + str(category_counter) + "_" + str(index - fix_index) + ".jpg"
                                 cv2.imwrite(renamed_path, cv2.resize(im, dim, interpolation=cv2.INTER_AREA))
@@ -76,16 +91,17 @@ def preprocessing():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--plot", dest="plot_flag", action='store_true', help="Show plot for data distribution")
-    parser.add_argument("-d", "--directory", dest="directory", default=os.path.dirname(__file__), help="Directory where dataset is putted", type=str)
+    parser.add_argument("-d", "--directory", dest="directory", default=os.path.dirname(os.path.realpath(__file__)), help="Directory where dataset is putted", type=str)
     parser.add_argument("-c", "--csvname", dest="csvname", default="train_info.csv", help="Name of the csv filena", type=str)
-    parser.add_argument("-i", "--imgfolder", dest="imgfolder", default="img", help="Folder where images is putted", type=str)
+    parser.add_argument("-i", "--imgfolder", dest="imgfolder", default="train", help="Folder where images is putted", type=str)
     parser.add_argument("-n", "--number", dest="number", default=500, help="How many elements for class to take", type=int)
-    parser.add_argument("-r", "--ratio", dest="scaleratio", default=1.0, help="Scale ratio to reduce the dimension of the dataset", type=float)
+    parser.add_argument("-r", "--ratio", dest="scaleratio", default=0.5, help="Scale ratio to reduce the dimension of the dataset", type=float)
     parser.add_argument("-f", "--folderdest", dest="destination", default="img", help="Destination directory for the images", type=str)
 
     args = parser.parse_args()
 
     current_directory = args.directory  
+    print(current_directory)
     csv_file_path = os.path.join(current_directory, args.csvname)
     path = os.path.join(current_directory, args.imgfolder)
 
