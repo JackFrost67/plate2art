@@ -8,7 +8,7 @@ nfiles = length(imagefiles);
 
 %%
 for i = 1 : nfiles
-    strcat(imagefiles(i).folder, "/", imagefiles(i).name)
+    strcat(imagefiles(i).folder, "/", imagefiles(i).name);
     paintImage = imread(strcat(imagefiles(i).folder, "/", imagefiles(i).name));
     [H, S, L] = rgb2ihsl(paintImage);
     
@@ -21,5 +21,11 @@ for i = 1 : nfiles
     % Feature 3: Hue circular statistics
     [hMean, hAngularDispersion, hMeanW, hAngularDispersionW] = feature3(H, S);
     
-    % Feauture 4: Colorfulness (EMD)
+    % Feature 4: Colorfulness (EMD)
+    EMD = feature4(paintImage);
+    
+    % Feature 5: Color names
+    
+    % Feature 6: Itten
+    Itten = feature6(paintImage);
 end
