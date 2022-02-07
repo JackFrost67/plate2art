@@ -1,4 +1,4 @@
-function [mean, angularDispersion, meanW, angularDispersionW] = feature3(H, S)
+function [mean, angularDispersion, meanW, angularDispersionW] = featureHue(H, S)
 %FEATURE3 circular statistics on Hue
     H = deg2rad(double(H));
     S = double(S);

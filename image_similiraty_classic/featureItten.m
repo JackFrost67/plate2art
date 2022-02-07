@@ -1,4 +1,4 @@
-function contranstFeatureVector = feature6(image)
+function contranstFeatureVector = featureItten(image)
     %FEATURE6 Itten color contrast theory
     
     %% Finding regions with k-means (k = 10)
