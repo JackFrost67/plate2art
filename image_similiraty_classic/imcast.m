@@ -15,23 +15,6 @@ function [outpict inclass] = imcast(inpict,outclass)
 %   
 %   Supported classes are:
 %   'uint8','uint16','int16','double','single','logical'
-%
-%   When casting an image as logical, the behavior is to threshold
-%   the image at 50% of its white value. This varies from the behavior 
-%   calling logical(inpict), which sets all nonzero pixels to 1.
-%
-%   TYPICAL USE:
-%   % convert unknown input to a known class
-%      [workingcopy inclass]=imcast(inpict,'double');
-%   % do a bunch of operations in floating point
-%      workingcopy=someoperation(workingcopy);
-%   % recast output to match original image class
-%      outpict=imcast(workingcopy,inclass);
-%
-% native m-code methods are much slower than the IPT methods
-% at least in R2009b; in R2015b, the difference isn't as big
-% IPT methods use precompiled private conversion functions
-% so see if we can exploit that first
 inclass = class(inpict);
 outclass = lower(outclass);
 if strcmp(inclass,outclass)

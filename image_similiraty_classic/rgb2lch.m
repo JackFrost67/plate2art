@@ -2,35 +2,6 @@ function outpict = rgb2lch(rgb,varargin)
 %   RGB2LCH(INPICT, {MODE}, {LIMIT}, {NOGC}, {WP})
 %       Convert an sRGB image to the cylindrical mappings of CIELUV, CIELAB, SRLAB2, OKLAB, or YPbPr
 %       
-%   INPICT is a single RGB image of any standard image class
-%   MODE is either 'luv' (default), 'lab', 'srlab', 'oklab', or 'ypbpr'
-%   LIMIT options include:
-%       'notruncate' performs no data truncation (default)
-%       'truncatergb' limits color points to RGB data ranges when in RGB
-%       'truncatelch' limits color points to RGB data ranges when in LCH 
-%       'truncatelchcalc' is the same as 'truncatelch', but uses direct calculations instead of a LUT
-%           (see maxchroma() documentation for details)
-%   NOGC option can be used to disable gamma correction of the output
-%       this is primarily intended to be used to speed up the calculations involved
-%       in checking whether points are in-gamut.  (about 30% faster)
-%   WP optionally allows the selection of the white point
-%       'D65' (default) 
-%       'D50' uses an adapted (Bradford) sRGB-XYZ matrix
-%       D50 method is not compatible with 'truncatelch' or 'oklab' options
-%
-%   NOGC and WP options do not apply in YPbPr mode
-%
-%   LCH output is of class 'double', with L in the range [0 100] and H in the range of [0 360]
-%   YCH output from YPbPr mode has Y in the range [0 1] and H in the range [0 360]
-%
-%   This code formed as an interpretation of Pascal Getreuer's COLORSPACE() and other files.
-%   Information on SRLAB2 can be found at http://www.magnetkern.de/srlab2.html or the paper
-%   "Deficiencies of the CIE-L*a*b* color space and introduction of the SRLAB2 color model"
-%   by Jan Behrens
-%   Information on OKLAB can be found at https://bottosson.github.io/posts/oklab/
-%
-%   See also: RGB2HSY, HSY2RGB, RGB2HUSL, HUSL2RGB, LCH2RGB, MAXCHROMA, CSVIEW.
-% fastest to slowest: luv>oklab>lab>srlab
 mode = 'luv';
 truncate = 'none';
 nogc = false;

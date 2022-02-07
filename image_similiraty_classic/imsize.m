@@ -8,14 +8,7 @@ function outsize = imsize(inpict,varargin)
 %
 %   INPICT is an array of any type
 %   LENGTH specifies the length of the output vector (default 4)
-%
-%   EXAMPLES:
-%    Test to see if two arrays are the same size:
-%      sizesdiffer=any(imsize(A)~=imsize(B));
-%    Just get the image height and width:
-%      pagesz=imsize(A,2);
-%
-%  See also: chancount
+
 veclen = 4;
 if numel(varargin) > 0
 	veclen = varargin{1};
