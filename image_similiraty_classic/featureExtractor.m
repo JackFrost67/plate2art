@@ -47,7 +47,7 @@ for i = 1 : nfiles
     
     %% Feature 12: Low Depth of Field (DOF)
     
-    %% Feature 13: Dynamics
+    %% Feature 13: Dynamics absolute
     
     %% Feature 14: Rule of Thirds
 end
