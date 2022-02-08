@@ -44,11 +44,14 @@ for i = 1 : nfiles
     statsS = graycoprops(graycomatrix(S));
     statsL = graycoprops(graycomatrix(L));
     
-    %% Feature 11: Level of Detail
+    %% Feature 11: Level of Detail (waterfall segmentation is needed)
     
     %% Feature 12: Low Depth of Field (DOF)
+
     
     %% Feature 13: Dynamics absolute
+    dynamics = featureDynamics(paintImage);
     
     %% Feature 14: Rule of Thirds
+    [hMeanRoT, sMeanRoT, lMeanRoT] = featureRuleOfThirds(paintImage);
 end
