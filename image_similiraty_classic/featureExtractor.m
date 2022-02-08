@@ -28,10 +28,26 @@ for i = 1 : nfiles
     colorNames = featuresColorNames(paintImage);
     
     %% Feature 6: Itten
-    Itten = featureItten(paintImage);
+    Itten = featureItten(paintImage, H, S, L);
     
     %% Feature 7: Wang
     
     %% Feature 8: Tamura
     [coarseness, contrast, directionality] = featuresTamura(paintImage);
+    
+    %% Feature 9: Wavelet textures
+    waveletTextures = featureWavelet(H, S, L);
+    
+    %% Feature 10: GLCM features
+    statsH = graycoprops(graycomatrix(H));
+    statsS = graycoprops(graycomatrix(S));
+    statsL = graycoprops(graycomatrix(L));
+    
+    %% Feature 11: Level of Detail
+    
+    %% Feature 12: Low Depth of Field (DOF)
+    
+    %% Feature 13: Dynamics
+    
+    %% Feature 14: Rule of Thirds
 end

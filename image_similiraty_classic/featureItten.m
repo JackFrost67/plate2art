@@ -1,4 +1,4 @@
-function contranstFeatureVector = featureItten(image)
+function contranstFeatureVector = featureItten(image, H, S, L)
     %FEATURE6 Itten color contrast theory
     
     %% Finding regions with k-means (k = 10)
@@ -6,8 +6,8 @@ function contranstFeatureVector = featureItten(image)
     sMean_ = [];
     lMean_ = [];
     
-    [H_, S_, L_] = rgb2ihsl(image);
     numberOfK = 10;
+    
     mask = imsegkmeans(image, numberOfK);
     
     %% mean of Hue, Saturation, Brightness of each region
@@ -15,9 +15,9 @@ function contranstFeatureVector = featureItten(image)
     contrastOfBrightness = 0;
     contrastOfSaturation = 0;
     for i = 1 : numberOfK
-        h_ = H_ .* uint8(mask == i);
-        s_ = S_ .* uint8(mask == i);
-        l_ = L_ .* uint8(mask == i);
+        h_ = H .* uint8(mask == i);
+        s_ = S .* uint8(mask == i);
+        l_ = L .* uint8(mask == i);
                
         hMean_ = [hMean_, meanHue(h_(h_ > 0))];
         sMean_ = [sMean_, mean2(s_(s_ > 0))];
