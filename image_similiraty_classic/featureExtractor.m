@@ -31,6 +31,7 @@ for i = 1 : nfiles
     Itten = featureItten(paintImage, H, S, L);
     
     %% Feature 7: Wang
+    Wang = featuresWang(paintImage);
     
     %% Feature 8: Tamura
     [coarseness, contrast, directionality] = featuresTamura(paintImage);

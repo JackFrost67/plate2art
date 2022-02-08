@@ -19,4 +19,9 @@ options = trainingOptions('sgdm', ...
     'OutputNetwork','best-validation-loss');
 
 %% train NN
-NN = trainNetwork(augImdsTrain, lgraph_1, options);
+[NN, info] = trainNetwork(augImdsTrain, lgraph_1, options);
+
+%% save nn and train data
+t = datetime('now');
+filename = [datestr(t,'yyyy-mm-dd-HH-MM') '.mat'];
+save(filename, 'NN', 'info');
