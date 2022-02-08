@@ -34,9 +34,9 @@ function estimate_image_quality(fn)
     end
 
     [pathstr,name,~] = fileparts(fn);
-    disp(name);
+    %disp(name);
     filename = convertCharsToStrings(name) + '_quality' + '.txt';
-    disp(txt);
+    %disp(txt);
     new_fn = fullfile(pathstr, filename);
     fid = fopen(new_fn,'wt');
     fprintf(fid, txt);
