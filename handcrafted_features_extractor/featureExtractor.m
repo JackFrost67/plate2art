@@ -1,21 +1,14 @@
-%%
-addpath("utils");
-
-paintImageDir = "/home/jackfrost67/Desktop/plate2art/img";
-
-imagefiles = dir(paintImageDir + "/*.jpg");
-nfiles = length(imagefiles);
-
-featuresVector = [];
-%%
-for i = 1 : nfiles
-    tic
-    strcat(imagefiles(i).folder, "/", imagefiles(i).name);
-    paintImage = imread(strcat(imagefiles(i).folder, "/", imagefiles(i).name));
-    [H, S, L] = rgb2ihsl(paintImage);
+function featuresVector = featureExtractor(image)
+%FEATUREEXTRACTOR Feature extraction using handcrafted feature based on
+%sentiment and color analysis
+    addpath("utils");
+    
+    %% transform the image from RGB to Hue Saturation Luminance
+    [H, S, L] = rgb2hsl(image);
     
     %% Feature 1: mean of brightness and saturation
-    [sMean, lMean] = featureSaturationBrightness(S, L);
+    sMean = mean2(S);
+    lMean = mean2(L);
     
     %% Feature 2: Pleasure, Arousal, Dominance
     [pleasure, arousal, dominance] = featurePleasureArousalDominance(sMean, lMean);
@@ -24,19 +17,19 @@ for i = 1 : nfiles
     [hMean, hAngularDispersion, hMeanW, hAngularDispersionW] = featureHue(H, S);
     
     %% Feature 4: Colorfulness (EMD)
-    EMD = featureColorfulness(paintImage);
+    EMD = featureColorfulness(image);
     
     %% Feature 5: Color names
-    colorNames = featuresColorNames(paintImage);
+    colorNames = featuresColorNames(image);
     
     %% Feature 6: Itten
-    Itten = featureItten(paintImage);
+    Itten = featureItten(image);
     
     %% Feature 7: Wang
-    Wang = featuresWang(paintImage);
+    Wang = featuresWang(image);
     
     %% Feature 8: Tamura
-    [coarseness, contrast, directionality] = featuresTamura(paintImage);
+    [coarseness, contrast, directionality] = featuresTamura(image);
     
     %% Feature 9: Wavelet textures
     waveletTextures = featureWavelet(H, S, L);
@@ -47,20 +40,19 @@ for i = 1 : nfiles
     statsL = graycoprops(graycomatrix(L));
     
     %% Feature 11: Level of Detail (waterfall segmentation is needed)
-    [levelOfDetail, ~] = watershedSegmentation(paintImage);
+    [levelOfDetail, ~] = watershedSegmentation(image);
     levelOfDetail = double(levelOfDetail);
     %% Feature 12: Low Depth of Field (DOF)
     DOF = featuresDOF(H, S, L, waveletTextures);
     
     %% Feature 13: Dynamics absolute
-    dynamics = featureDynamics(paintImage);
+    dynamics = featureDynamics(image);
     
     %% Feature 14: Rule of Thirds
-    [hMeanRoT, sMeanRoT, lMeanRoT] = featureRuleOfThirds(paintImage);
+    [hMeanRoT, sMeanRoT, lMeanRoT] = featureRuleOfThirds(image);
     
-    %% 
-    featuresVector = [featuresVector;
-                      sMean lMean pleasure arousal dominance hMean ...
+    %% Returning the whole vector of features
+    featuresVector = [sMean lMean pleasure arousal dominance hMean ...
                       hAngularDispersion hMeanW hAngularDispersionW EMD ...
                       colorNames Itten Wang' coarseness contrast directionality ...
                       waveletTextures statsH.Contrast statsH.Correlation ...
@@ -69,5 +61,4 @@ for i = 1 : nfiles
                       statsL.Contrast statsL.Correlation statsL.Energy ...
                       statsL.Homogeneity levelOfDetail DOF dynamics hMeanRoT ...
                       sMeanRoT lMeanRoT];
-     
 end

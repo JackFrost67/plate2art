@@ -92,5 +92,4 @@ features(27) = sum(HighS) / totalPixels;
 features(28) = sum(MiddleS) / totalPixels;
 features(29) = sum(LowS) / totalPixels;
 
-
 end

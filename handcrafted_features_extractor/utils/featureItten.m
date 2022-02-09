@@ -5,7 +5,7 @@ function contranstFeatureVector = featureItten(image)
     maxRowCol = max(rows, cols);
     image = imresize(image, 1/ceil(maxRowCol/500));
     
-    [H, S, L] = rgb2ihsl(image);
+    [H, S, L] = rgb2hsl(image);
     
     %% Finding regions with watershedSegmentation
     hMean_ = [];

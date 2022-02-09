@@ -1,4 +1,4 @@
-function [H, S, L] = rgb2ihsl(rgb)
+function [H, S, L] = rgb2hsl(rgb)
 %RGB2IHSL Summary of this function goes here
 %   Detailed explanation goes here    
     R = double(rgb(:, :, 1));

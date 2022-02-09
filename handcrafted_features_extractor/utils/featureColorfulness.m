@@ -1,4 +1,4 @@
-function EMD = feature4(rgbImage)
+function EMD = featureColorfulness(rgbImage)
     %%
     [rows, cols] = size(rgbImage, 1, 2);
     rgbHist = zeros(4, 3);

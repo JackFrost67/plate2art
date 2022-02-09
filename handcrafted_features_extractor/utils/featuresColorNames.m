@@ -52,6 +52,5 @@ amountOfColors(10) = sum(sum(whitePixels))/totalPixels;
 yellowPixels = colorImage(:,:,1) == 255 & colorImage(:,:,2) == 255 & colorImage(:,:,3) == 0;
 amountOfColors(11) = sum(sum(yellowPixels))/totalPixels;
 
-
 end
 

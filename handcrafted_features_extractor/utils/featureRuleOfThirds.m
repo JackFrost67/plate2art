@@ -5,7 +5,7 @@ function [hMean, sMean, lMean] = featureRuleOfThirds(image)
     window = centerCropWindow2d(size(image), windowSize);
     croppedImage = imcrop(image, window);
     
-    [H, S, L] = rgb2ihsl(croppedImage);
+    [H, S, L] = rgb2hsl(croppedImage);
     
     hMean = meanHue(H);
     sMean = mean2(S);
