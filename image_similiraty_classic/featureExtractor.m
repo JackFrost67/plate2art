@@ -1,6 +1,4 @@
 %%
-featureVector = [];
-
 paintImageDir = "/home/jackfrost67/Desktop/plate2art/img";
 
 imagefiles = dir(paintImageDir + "/*.jpg");
@@ -56,7 +54,7 @@ for i = 1 : nfiles
     %% Feature 14: Rule of Thirds
     [hMeanRoT, sMeanRoT, lMeanRoT] = featureRuleOfThirds(paintImage);
     
-    %%
+    %% BUG: VETTORE SI AUTOCASTA A INT!!!!!!!!!!
     featuresVector = [featuresVector;
                       sMean lMean pleasure arousal dominance hMean ...
                       hAngularDispersion hMeanW hAngularDispersionW EMD ...
@@ -65,5 +63,6 @@ for i = 1 : nfiles
                       statsH.Energy statsH.Homogeneity statsS.Contrast ...
                       statsS.Correlation statsS.Energy statsS.Homogeneity ...
                       statsL.Contrast statsL.Correlation statsL.Energy ...
-                      statsL.Homogeneity dynamics];
+                      statsL.Homogeneity levelOfDetail DOF dynamics hMeanRoT ...
+                      sMeanRoT lMeanRoT];
 end

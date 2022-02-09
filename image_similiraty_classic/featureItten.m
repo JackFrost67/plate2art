@@ -9,7 +9,7 @@ function contranstFeatureVector = featureItten(image, H, S, L)
     [numberOfK, mask] = watershedSegmentation(image);
     
     %% mean of Hue, Saturation, Brightness of each region
-    ittenHue = [0, 20, 32, 46, 56, 79, 158, 192, 208, 233, 278, 322];
+    ittenHue = [0 20 32 46 56 79 158 192 208 233 278 322];
     contrastOfBrightness = 0;
     contrastOfSaturation = 0;
     for i = 1 : numberOfK
@@ -39,28 +39,7 @@ function contranstFeatureVector = featureItten(image, H, S, L)
     if(isempty(contrastComplement))
         contrastComplement = 0;
     end
-    %% Harmony
-%     histogramHue = histcounts(hMean_, ittenHue);
-%     %for each bin compute %
-%     histogramHueRate = double(histogramHue) / double(numberOfK);
-%     %counte the bins >= 0.5%
-%     n = sum(histogramHueRate(:) > 0.005);
-%     histMainHue = histogramHueRate(histogramHueRate(:)>0.05);
-%     mainHue = ittenHue(histogramHueRate(:)>0.005);
-%     idxHue = find(histogramHueRate(:)>0.005);
-%     
-%     if n>2
-%         idxHue = [idxHue(end), idxHue, idxHue(1)];
-%         for i = 1:n
-%             if (idx(1)  idx(i) == n)
-%                 
-%             else
-%                 
-%             end
-%     end
-%     
-    
-    
+   
     hueCount = length(unique(hMean_));
     contranstFeatureVector = [contrastOfBrightness, contrastOfSaturation, contrastComplement, hueCount];
 end
