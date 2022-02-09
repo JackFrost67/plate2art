@@ -1,4 +1,6 @@
 %%
+addpath("utils");
+
 paintImageDir = "/home/jackfrost67/Desktop/plate2art/img";
 
 imagefiles = dir(paintImageDir + "/*.jpg");
@@ -67,5 +69,5 @@ for i = 1 : nfiles
                       statsL.Contrast statsL.Correlation statsL.Energy ...
                       statsL.Homogeneity levelOfDetail DOF dynamics hMeanRoT ...
                       sMeanRoT lMeanRoT];
-     toc
+     
 end
