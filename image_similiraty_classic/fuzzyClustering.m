@@ -1,6 +1,7 @@
 function U = fuzzyClustering(image, maxIter)
-%FEATURES_WANG
-%compute segmentation with kmeans and L means for each segment
+%fuzzyClustering
+%compute the fuzzy clustering
+
 image = imgaussfilt(image, 1.5);
 x = rgb2lch(image, 'lab');
 x = x(:,:,1);
@@ -36,12 +37,14 @@ while(relerr >= tol && iter < maxIter)
         elseif x(i,1) > c(5)
             U(i,5) = 1;
             U(i,1:4) = 0;
-        end
-        for j = 1:5
-            if x(i,1) > c(j) && x(i) <= c(j+1)
-                U(i,j) = (c(j+1)-x(i,1)) / (c(j+1)-c(j))  ;
-                U(i,:) = 1-U(i,j);
-                U(i,j) = (c(j+1)-x(i,1)) / (c(j+1)-c(j))  ;
+        else
+            for j = 1:4
+                if x(i,1) > c(j) && x(i) <= c(j+1)
+
+                    U(i,j) = (c(j+1)-x(i,1)) / (c(j+1)-c(j))  ;
+                    U(i,j+1) = 1-U(i,j);
+                    %U(i,j) = (c(j+1)-x(i,1)) / (c(j+1)-c(j))  ;
+                end
             end
         end
     end

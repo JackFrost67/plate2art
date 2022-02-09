@@ -5,7 +5,6 @@ paintImageDir = "/home/jackfrost67/Desktop/plate2art/img";
 
 imagefiles = dir(paintImageDir + "/*.jpg");
 nfiles = length(imagefiles);
-
 %%
 for i = 1 : nfiles
     strcat(imagefiles(i).folder, "/", imagefiles(i).name);
@@ -44,11 +43,14 @@ for i = 1 : nfiles
     statsS = graycoprops(graycomatrix(S));
     statsL = graycoprops(graycomatrix(L));
     
-    %% Feature 11: Level of Detail
-    
+    %% Feature 11: Level of Detail (waterfall segmentation is needed)
+    [levelOfDetail, ~] = watershedSegmentation(paintImage);
     %% Feature 12: Low Depth of Field (DOF)
+    DOF = featuresDOF(H, S, L, waveletTextures);
     
-    %% Feature 13: Dynamics
+    %% Feature 13: Dynamics absolute
+    dynamics = featureDynamics(paintImage);
     
     %% Feature 14: Rule of Thirds
+    [hMeanRoT, sMeanRoT, lMeanRoT] = featureRuleOfThirds(paintImage);
 end

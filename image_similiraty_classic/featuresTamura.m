@@ -9,10 +9,6 @@ function [Fcoarseness,Fcontrast,Fdirection] = featuresTamura(im)
     Fcontrast = computeContrast(image);
     %-------------------Directionality-------------------
     Fdirection = computeDirection(imDouble);
-    %%
-    fprintf('[Fcoarseness,Fcontrast,Fdirection]')
-    display([Fcoarseness,Fcontrast,Fdirection])
-
 end
 
 
@@ -260,7 +256,6 @@ function direction = computeDirection(imDouble)
         HD(m+1) = countk;
     end
     HDf = HD/counti;
-    title('Local Directionality Histogram HDf')
     %peakdet function to find peak values
     [m p]=peakdet(HDf,0.000005);
 
