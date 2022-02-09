@@ -1,9 +1,9 @@
 function [hMean, sMean, lMean] = featureRuleOfThirds(image)
 %featureRuleOfThirds Statistics of the inner rectangle formed dividing the
 %image in thirds
-    windowSize = [(size(image, 1) / 3) (size(image, 2) / 3)];
+    windowSize = [ceil(size(image, 1) / 3) ceil(size(image, 2) / 3)];
     window = centerCropWindow2d(size(image), windowSize);
-    croppedImage = imgcrop(image, window);
+    croppedImage = imcrop(image, window);
     
     [H, S, L] = rgb2ihsl(croppedImage);
     

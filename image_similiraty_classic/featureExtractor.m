@@ -6,6 +6,7 @@ paintImageDir = "/home/jackfrost67/Desktop/plate2art/img";
 imagefiles = dir(paintImageDir + "/*.jpg");
 nfiles = length(imagefiles);
 
+featuresVector = [];
 %%
 for i = 1 : nfiles
     strcat(imagefiles(i).folder, "/", imagefiles(i).name);
@@ -54,4 +55,15 @@ for i = 1 : nfiles
     
     %% Feature 14: Rule of Thirds
     [hMeanRoT, sMeanRoT, lMeanRoT] = featureRuleOfThirds(paintImage);
+    
+    %%
+    featuresVector = [featuresVector;
+                      sMean lMean pleasure arousal dominance hMean ...
+                      hAngularDispersion hMeanW hAngularDispersionW EMD ...
+                      colorNames Itten Wang' coarseness contrast directionality ...
+                      waveletTextures statsH.Contrast statsH.Correlation ...
+                      statsH.Energy statsH.Homogeneity statsS.Contrast ...
+                      statsS.Correlation statsS.Energy statsS.Homogeneity ...
+                      statsL.Contrast statsL.Correlation statsL.Energy ...
+                      statsL.Homogeneity dynamics];
 end

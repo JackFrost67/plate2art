@@ -8,7 +8,7 @@ function featureDynamicsVector = featureDynamics(image)
     [SHT, theta, rho] = hough(bwImage);
     
     %% searching for Hough peaks
-    houghPeaks = houghpeaks(SHT, 25,'threshold',ceil(0.3 * max(SHT(:))));
+    houghPeaks = houghpeaks(SHT, 25, 'threshold', ceil(0.3 * max(SHT(:))));
     
     %% finding the hough line
     houghLines = houghlines(bwImage, theta ,rho, houghPeaks);
@@ -41,11 +41,12 @@ function featureDynamicsVector = featureDynamics(image)
     for i = 1 : length(dynamicLines)
         len_ = norm(dynamicLines(i).point1 - dynamicLines(i).point2);
         len = [len len_];
-        dynamicTheta = [dynamicTheta staticLines(i).theta];
+        dynamicTheta = [dynamicTheta dynamicLines(i).theta];
     end
     slopeDynamicLines = sum((1 ./ len) .* dynamicTheta);
     meanLendynamicLines = mean(len);
     
-    featureDynamicsVector = [slopeStaticLines slopeDynamicLines meanLenStaticLines meanLendynamicLines];
+    featureDynamicsVector = [slopeStaticLines slopeDynamicLines ...
+                            meanLenStaticLines meanLendynamicLines];
 end
 
