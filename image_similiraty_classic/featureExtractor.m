@@ -45,6 +45,7 @@ for i = 1 : nfiles
     
     %% Feature 11: Level of Detail (waterfall segmentation is needed)
     [levelOfDetail, ~] = watershedSegmentation(paintImage);
+    levelOfDetail = double(levelOfDetail);
     %% Feature 12: Low Depth of Field (DOF)
     DOF = featuresDOF(H, S, L, waveletTextures);
     
@@ -54,7 +55,7 @@ for i = 1 : nfiles
     %% Feature 14: Rule of Thirds
     [hMeanRoT, sMeanRoT, lMeanRoT] = featureRuleOfThirds(paintImage);
     
-    %% BUG: VETTORE SI AUTOCASTA A INT!!!!!!!!!!
+    %% 
     featuresVector = [featuresVector;
                       sMean lMean pleasure arousal dominance hMean ...
                       hAngularDispersion hMeanW hAngularDispersionW EMD ...
