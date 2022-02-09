@@ -46,9 +46,9 @@ for i = 1 : nfiles
     statsL = graycoprops(graycomatrix(L));
     
     %% Feature 11: Level of Detail (waterfall segmentation is needed)
-    
+    [levelOfDetail, ~] = watershedSegmentation(paintImage);
     %% Feature 12: Low Depth of Field (DOF)
-
+    DOF = featuresDOF(H, S, L, waveletTextures);
     
     %% Feature 13: Dynamics absolute
     dynamics = featureDynamics(paintImage);

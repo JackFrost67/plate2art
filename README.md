@@ -23,10 +23,10 @@ Progetto relativo al corso di Visual Information Processing and Management anno 
   - Segmentazione:
     - [x] Trovare piatto / riconoscere se non è presente il piatto -> YOLO
   - Classificazione:
-	  - [ ] Fine tuning Neural Net di quadri
-    - [ ] Valutazione usando metriche classiche
+	  - [x] Fine tuning Neural Net di quadri
+    - [x] Valutazione usando metriche classiche
   - Similarity:
-    - [ ] Feature extraction dalla NN e confronto con feature immagine piatto - approccio NN
+    - [x] Feature extraction dalla NN e confronto con feature immagine piatto - approccio NN
     - [ ] Feature extraction e confronto con feature immagine piatto - approccio classico HOG - histogram colore
     - [ ] Valutazione usando metriche qualitative 
 

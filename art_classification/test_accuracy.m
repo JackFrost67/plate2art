@@ -1,6 +1,6 @@
 %% Test accuracy
 
-net = load("NASNet_randcrop-8-2.mat");
+net = load("trained_models/NASNet_resize.mat");
 net = net.NN;
 %% Top 1 accuracy
 [YPred,scores] = classify(net,augImdsTest);
