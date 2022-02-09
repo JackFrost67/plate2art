@@ -1,7 +1,13 @@
-function contranstFeatureVector = featureItten(image, H, S, L)
+function contranstFeatureVector = featureItten(image)
     %FEATURE6 Itten color contrast theory
+    %resize the image for computional efficency reason
+    [rows, cols, ~]=size(image);
+    maxRowCol = max(rows, cols);
+    image = imresize(image, 1/ceil(maxRowCol/500));
     
-    %% Finding regions with k-means (k = 10)
+    [H, S, L] = rgb2ihsl(image);
+    
+    %% Finding regions with watershedSegmentation
     hMean_ = [];
     sMean_ = [];
     lMean_ = [];

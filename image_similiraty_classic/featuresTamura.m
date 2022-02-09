@@ -1,5 +1,9 @@
-function [Fcoarseness,Fcontrast,Fdirection] = featuresTamura(im)
-
+function [Fcoarseness,Fcontrast,Fdirection] = featuresTamura(im)   
+    %resize the image for computional efficency reason
+    [rows, cols, ~]=size(im);
+    maxRowCol = max(rows, cols);
+    im = imresize(im, 1/ceil(maxRowCol/400));
+    
     image = rgb2gray(im);%Converts RGB image to grayscale
     imDouble=double(image);
 

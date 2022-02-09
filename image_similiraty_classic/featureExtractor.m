@@ -7,6 +7,7 @@ nfiles = length(imagefiles);
 featuresVector = [];
 %%
 for i = 1 : nfiles
+    tic
     strcat(imagefiles(i).folder, "/", imagefiles(i).name);
     paintImage = imread(strcat(imagefiles(i).folder, "/", imagefiles(i).name));
     [H, S, L] = rgb2ihsl(paintImage);
@@ -27,7 +28,7 @@ for i = 1 : nfiles
     colorNames = featuresColorNames(paintImage);
     
     %% Feature 6: Itten
-    Itten = featureItten(paintImage, H, S, L);
+    Itten = featureItten(paintImage);
     
     %% Feature 7: Wang
     Wang = featuresWang(paintImage);
@@ -66,4 +67,5 @@ for i = 1 : nfiles
                       statsL.Contrast statsL.Correlation statsL.Energy ...
                       statsL.Homogeneity levelOfDetail DOF dynamics hMeanRoT ...
                       sMeanRoT lMeanRoT];
+     toc
 end

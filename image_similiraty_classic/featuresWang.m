@@ -1,5 +1,11 @@
 function features = featuresWang(image)
 %Computes fuzzy histogram features
+
+%resize the image for computional efficency reason
+[rows, cols, ~]=size(image);
+maxRowCol = max(rows, cols);
+image = imresize(image, 1/ceil(maxRowCol/400));
+
 features = zeros(29,1);
 
 [rows, cols, ch] = size(image);
@@ -10,7 +16,7 @@ grayimg = double(rgb2gray(image))./255;
 labimg = rgb2lab(image);
 labimg = reshape(labimg, [rows*cols, ch]);
 
-U = fuzzyClustering(image, 10000);
+U = fuzzyClustering(image, 8000);
 
 image = reshape(rgb2lch(image, 'lab'), [rows*cols, ch]);
 
