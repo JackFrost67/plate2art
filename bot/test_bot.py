@@ -13,7 +13,6 @@ class Step(Enum):
     FOOD_NOT_FOUND = 1
     IMG_QUALITY = 2
     QUALITY_BAD = 3
-    SIMILARITY = 4
 
 def fileparts(fn):
     (dirName, fileName) = os.path.split(fn)
@@ -47,12 +46,17 @@ class TelegramBot:
             quality_txt = f.read()
         return quality_txt
     
-    def get_similar_images(self, img_path):
+    def get_similar_images(self, img_path, chat_id):
         cur_dir = os.path.dirname(os.path.realpath(__file__))
-        quality_dir = cur_dir + "/../image_quality"
+        dir_mat = cur_dir + "/../image_similarity_nn/"
         matlab_cmd = 'matlab'
-        cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + quality_dir + "\'); estimate_image_quality(\'" + img_path + "\'); quit\""
+        cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_NN(\'" + img_path + "\'); quit\""
         subprocess.call(cmd,shell=True)
+        self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale:")
+        self.bot.sendPhoto(chat_id, photo=open('tmp/received_image_sim_nn_1.jpg', 'rb'))
+        self.bot.sendPhoto(chat_id, photo=open('tmp/received_image_sim_nn_2.jpg', 'rb'))
+        self.bot.sendPhoto(chat_id, photo=open('tmp/received_image_sim_nn_3.jpg', 'rb'))
+        #TODO aggiungere similarity classica
 
 
     def on_chat_message(self, msg):
@@ -76,6 +80,7 @@ class TelegramBot:
                 
                 if food_found:
                     self.bot.sendMessage(chat_id,"Cibo trovato!")
+                    self.bot.sendMessage(chat_id,"Analizzo la qualità dell'immagine...")
                     self.bot.sendPhoto(chat_id, photo=open('tmp/received_image.jpg', 'rb'))
                     txt_quality = self.calculate_image_quality('tmp/received_image.jpg')
                     self.bot.sendMessage(chat_id, txt_quality)
@@ -84,7 +89,8 @@ class TelegramBot:
                         self.bot.sendMessage(chat_id, "Rilevata scarsa qualità, continuare?\n/Si\n/No")
                         self.step = Step.QUALITY_BAD
                     else:
-                        self.step = Step.SIMILARITY
+                        self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
+                        self.get_similar_images('tmp/received_image.jpg', chat_id)
                 else:
                     self.bot.sendMessage(chat_id, "Cibo non trovato, continuare?\n/Si\n/No")
                     self.step = Step.FOOD_NOT_FOUND
@@ -95,15 +101,19 @@ class TelegramBot:
                 txt = msg['text']
 
                 if txt == '/Si':
-                    self.bot.sendMessage(chat_id, "Ok, analizzo la qualità dell'immagine...")
-                    txt_quality = self.calculate_image_quality('tmp/received_image.png')
+                    self.bot.sendMessage(chat_id,"Analizzo la qualità dell'immagine...")
+                    self.bot.sendPhoto(chat_id, photo=open('tmp/received_image.jpg', 'rb'))
+                    txt_quality = self.calculate_image_quality('tmp/received_image.jpg')
                     self.bot.sendMessage(chat_id, txt_quality)
                     if ("too bright" in txt_quality or "too dark" in txt_quality
                         or "Poor" in txt_quality or "Bad" in txt_quality):
                         self.bot.sendMessage(chat_id, "Rilevata scarsa qualità, continuare?\n/Si\n/No")
                         self.step = Step.QUALITY_BAD
                     else:
-                        self.step = Step.SIMILARITY
+                        self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
+                        self.get_similar_images('tmp/received_image.jpg', chat_id)
+                        self.step = Step.RECEIVE_IMAGE
+
                 elif txt == '/No':
                     self.bot.sendMessage(chat_id, 'Mi dispiace, riprova con un\'altra foto')
                     self.step = Step.RECEIVE_IMAGE
@@ -116,7 +126,8 @@ class TelegramBot:
 
                 if txt == '/Si':
                     self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
-                    self.step = Step.SIMILARITY
+                    self.get_similar_images('tmp/received_image.jpg', chat_id)
+                    self.step = Step.RECEIVE_IMAGE
                 elif txt == '/No':
                     self.bot.sendMessage(chat_id, 'Mi dispiace, riprova con un\'altra foto')
                     self.step = Step.RECEIVE_IMAGE
