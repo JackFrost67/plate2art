@@ -4,6 +4,9 @@ img_food/
 img_food_google/
 *.zip
 
+# file bot temporanei
+bot/tmp
+
 #yolo
 segmentation/food100.names
 segmentation/yolov2-food100.cfg
