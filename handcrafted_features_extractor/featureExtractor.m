@@ -1,7 +1,13 @@
 function featuresVector = featureExtractor(image)
 %FEATUREEXTRACTOR Feature extraction using handcrafted feature based on
 %sentiment and color analysis
-    addpath("utils");
+    %addpath("utils");
+    
+    [rows, cols, ~]=size(image);
+    maxRowCol = max(rows, cols);
+    if(maxRowCol > 4000)
+        image = imresize(image, 1/ceil(maxRowCol/1000));
+    end
     
     %% transform the image from RGB to Hue Saturation Luminance
     [H, S, L] = rgb2hsl(image);
@@ -38,6 +44,17 @@ function featuresVector = featureExtractor(image)
     statsH = graycoprops(graycomatrix(H));
     statsS = graycoprops(graycomatrix(S));
     statsL = graycoprops(graycomatrix(L));
+    
+    if isnan(statsH.Correlation)
+        statsH.Correlation = 0;
+    end
+    if isnan(statsS.Correlation)
+        statsS.Correlation = 0;
+    end
+    
+    if isnan(statsL.Correlation)
+        statsL.Correlation = 0;
+    end
     
     %% Feature 11: Level of Detail (waterfall segmentation is needed)
     [levelOfDetail, ~] = watershedSegmentation(image);

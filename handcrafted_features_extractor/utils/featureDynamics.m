@@ -32,8 +32,12 @@ function featureDynamicsVector = featureDynamics(image)
         len = [len len_];
         staticTheta = [staticTheta staticLines(i).theta];
     end
-    slopeStaticLines = sum((1 ./ len) .* staticTheta);
-    meanLenStaticLines = mean(len);
+    slopeStaticLines = sum((len ./ sum(len)) .* staticTheta);
+    if ~isempty(len)
+        meanLenStaticLines = mean(len);
+    else 
+        meanLenStaticLines = 0;
+    end
     
     %%
     len = [];
@@ -43,8 +47,12 @@ function featureDynamicsVector = featureDynamics(image)
         len = [len len_];
         dynamicTheta = [dynamicTheta dynamicLines(i).theta];
     end
-    slopeDynamicLines = sum((1 ./ len) .* dynamicTheta);
-    meanLendynamicLines = mean(len);
+    slopeDynamicLines = sum((len ./ sum(len)) .* dynamicTheta);
+    if ~isempty(len)
+        meanLendynamicLines = mean(len);
+    else 
+        meanLendynamicLines = 0;
+    end
     
     featureDynamicsVector = [slopeStaticLines slopeDynamicLines ...
                             meanLenStaticLines meanLendynamicLines];

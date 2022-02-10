@@ -1,4 +1,8 @@
 function [numberOfLabel, imgLabel] = watershedSegmentation(image)
+    [rows, cols, ~]=size(image);
+    maxRowCol = max(rows, cols);
+    image = imresize(image, 1/ceil(maxRowCol/1000));
+    
     % watershed segmentation
     grayImage = rgb2gray(image);
     %compute gradient

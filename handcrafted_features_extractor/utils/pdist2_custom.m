@@ -1,4 +1,4 @@
-function D = pdist2( X, Y, metric )
+function D = pdist2_custom( X, Y, metric )
 % Calculates the distance between sets of vectors.
 %
 % Let X be an m-by-p matrix representing m points in p-dimensional space

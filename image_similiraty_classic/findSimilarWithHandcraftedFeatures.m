@@ -1,18 +1,21 @@
 function findSimilarWithHandcraftedFeatures(filename)
-    addpath("handcrafted_features_extractor");
+    load("searchers/searcher.mat");
+    load("matlab1.mat");
+    load("imds1.mat");
+    %imageDir = "../img/";
+    %imds = imageDatastore(imageDir);
     
-    imageDir = "../img/";
-    imds = imageDatastore(imageDir);
+    %%
+    img = imread(filename);
     
-    image = imread(filename);
-    
-    features = extractFeatures(image);
+    features = featureExtractor(img);
    
     idx = knnsearch(ex_searcher_trained, features, 'K', 3);
     
-    img1 = readimage(imds,idx(1,1));
-    img2 = readimage(imds,idx(1,2));
-    img3 = readimage(imds,idx(1,3));
+    %%
+    img1 = readimage(imds, idx(1,1));
+    img2 = readimage(imds, idx(1,2));
+    img3 = readimage(imds, idx(1,3));
     
     figure(1)
     imshow(img);

@@ -1,21 +1,22 @@
 %% Extract feature for the paintings dataset
+delete(gcp('nocreate'));
+p = parpool();
+addpath("utils");
 paintImageDir = "../img/";
 imds = imageDatastore(paintImageDir);
 
 nfiles = size(imds.Files, 1);
 
-featuresVector = [];
+featuresVector = zeros(nfiles, 92, 'double');
 %%
-for i = 1 : nfiles
-    tic
-    i
+parfor i = 1 : nfiles 
+    fprintf("img: %d\n", i);
     name = imds.Files{i, 1};
     image = imread(name);
     
-    %% extract features
-    featuresVector = [featuresVector;
-                      featureExtractor(image)];
-    toc
+    % extract features
+    featuresVector(i, :) = featureExtractor(image);
 end
 
-save('HandCraftedFeaturesPaintings.mat', 'featuresVector');
+%%
+save('HandCraftedFeaturesPaintings1.mat', 'featuresVector');

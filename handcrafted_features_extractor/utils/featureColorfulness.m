@@ -47,8 +47,8 @@ function EMD = featureColorfulness(rgbImage)
     normalizedRgbHist = rgbHist / max(rgbHist, [], 'all');
     normalizedRgbHistTemplate = rgbHistTemplate / max(rgbHistTemplate, [], 'all');
     
-    EMD1 = pdist2(normalizedRgbHist(:, 1)', normalizedRgbHistTemplate(:, 1)', 'emd');
-    EMD2 = pdist2(normalizedRgbHist(:, 2)', normalizedRgbHistTemplate(:, 2)', 'emd');
-    EMD3 = pdist2(normalizedRgbHist(:, 3)', normalizedRgbHistTemplate(:, 3)', 'emd');
+    EMD1 = pdist2_custom(normalizedRgbHist(:, 1)', normalizedRgbHistTemplate(:, 1)', 'emd');
+    EMD2 = pdist2_custom(normalizedRgbHist(:, 2)', normalizedRgbHistTemplate(:, 2)', 'emd');
+    EMD3 = pdist2_custom(normalizedRgbHist(:, 3)', normalizedRgbHistTemplate(:, 3)', 'emd');
     EMD = (EMD1 + EMD2 + EMD3) / 3;
 end
