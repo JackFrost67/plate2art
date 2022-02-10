@@ -2,6 +2,7 @@
 img/
 img_food/
 img_food_google/
+art_dataset_preprocessing/train
 *.zip
 
 # file bot temporanei
