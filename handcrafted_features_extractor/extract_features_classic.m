@@ -1,4 +1,4 @@
-function featuresVector = featureExtractor(image)
+function featuresVector = extract_features_classic(image)
 %FEATUREEXTRACTOR Feature extraction using handcrafted feature based on
 %sentiment and color analysis
     %addpath("utils");
