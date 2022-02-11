@@ -49,14 +49,16 @@ class TelegramBot:
         return quality_txt
     
     def get_similar_images(self, img_path, chat_id):
+
+        df = pd.read_csv('img_db.csv')
+
+        ## Similarity con NN
         cur_dir = os.path.dirname(os.path.realpath(__file__))
         dir_mat = cur_dir + "/../image_similarity_nn/"
         matlab_cmd = 'matlab'
         cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_NN(\'" + img_path + "\'); quit\""
         subprocess.call(cmd,shell=True)
         self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale:")
-
-        df = pd.read_csv('img_db.csv')
 
         dirName, fileBaseName, fileExtension = fileparts(img_path)
         sim_nn_txt = os.path.join(dirName, fileBaseName + '_sim_nn' + '.txt')
@@ -71,9 +73,29 @@ class TelegramBot:
             title = img_f['title'].values[0]
             caption_txt = title + ' - ' + artist
             self.bot.sendPhoto(chat_id, photo=open(img_path, 'rb'), caption=caption_txt)
-        #TODO aggiungere similarity classica
 
+        ## Similarity con metriche classiche
+        cur_dir = os.path.dirname(os.path.realpath(__file__))
+        dir_mat = cur_dir + "/../image_similarity_classic/"
+        matlab_cmd = 'matlab'
+        cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_classic(\'" + img_path + "\'); quit\""
+        subprocess.call(cmd,shell=True)
+        self.bot.sendMessage(chat_id, "Migliori quadri trovati con metriche classiche:")
 
+        dirName, fileBaseName, fileExtension = fileparts(img_path)
+        sim_classic_txt = os.path.join(dirName, fileBaseName + '_sim_classic' + '.txt')
+
+        with open(sim_classic_txt) as f:
+            lines = f.readlines()
+        for line in lines: 
+            #print(line)
+            img_path = line.rstrip("\n")
+            img_f = (df.loc[df['filename'] == img_path])
+            artist = img_f['artist'].values[0]
+            title = img_f['title'].values[0]
+            caption_txt = title + ' - ' + artist
+            self.bot.sendPhoto(chat_id, photo=open(img_path, 'rb'), caption=caption_txt)
+        
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)  # get dei parametri della conversazione e del tipo di messaggio
 
