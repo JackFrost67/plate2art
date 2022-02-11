@@ -16,7 +16,7 @@ Progetto relativo al corso di Visual Information Processing and Management anno 
 ## TODO: 
   - Bot:
     - [x] Image quality
-    - [ ] Similarity
+    - [x] Similarity
   - Riconoscimento immagini di bassa qualità:
     - [x] immagini sfocate/rumorose -> PIQE
     - [x] immagini sovraesposte/sottoesposte -> media luminanza
@@ -27,7 +27,7 @@ Progetto relativo al corso di Visual Information Processing and Management anno 
     - [x] Valutazione usando metriche classiche
   - Similarity:
     - [x] Feature extraction dalla NN e confronto con feature immagine piatto - approccio NN
-    - [ ] Feature extraction e confronto con feature immagine piatto - approccio classico HOG - histogram colore
-    - [ ] Valutazione usando metriche qualitative 
+    - [x] Feature extraction e confronto con feature immagine piatto - approccio classico HOG - histogram colore
+    - [x] Valutazione usando metriche qualitative 
 
 
