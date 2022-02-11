@@ -47,10 +47,17 @@ def preprocessing():
     with open("info.txt", "w") as info_file:
         with open("img_db.csv", "w") as img_db_csv:
             img_db_writer = csv.writer(img_db_csv)
+            row = ["filename", "artist", "title", "style", "genre", "dates"]
+            img_db_writer.writerow(row)
             info_file.write("Code & Category\n")
             for category in series.cat.categories:
                 filenames = [row[0] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
+                artists = [row[1] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
                 titles = [row[2] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
+                styles = [row[3] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
+                genres = [row[4] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
+                dates = [row[5] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
+
                 if (len(filenames) >= args.number):
                     category_counter += 1
                     category_list.append(category)
@@ -75,9 +82,10 @@ def preprocessing():
                                     dim = (width, height)
                                     renamed_path = current_directory + "/" + args.destination + "/" + str(category_counter) + "_" + str(index - fix_index) + ".jpg"
                                     index_img = filenames.index(filename)
-                                    row = [renamed_path, titles[index_img]]
+                                    other_path = "/home/fdila/repos/uni/plate2art/img/"+ str(category_counter) + "_" + str(index - fix_index) + ".jpg"
+                                    row = [other_path, artists[index_img], titles[index_img], styles[index_img], genres[index_img], dates[index_img]]
                                     img_db_writer.writerow(row)
-                                    cv2.imwrite(renamed_path, cv2.resize(im, dim, interpolation=cv2.INTER_AREA))
+                                    #cv2.imwrite(renamed_path, cv2.resize(im, dim, interpolation=cv2.INTER_AREA))
                                 else:
                                     fix_index += 1
                         else:
@@ -100,7 +108,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--plot", dest="plot_flag", action='store_true', help="Show plot for data distribution")
     parser.add_argument("-d", "--directory", dest="directory", default=os.path.dirname(os.path.realpath(__file__)), help="Directory where dataset is putted", type=str)
-    parser.add_argument("-c", "--csvname", dest="csvname", default="train_info.csv", help="Name of the csv filena", type=str)
+    parser.add_argument("-c", "--csvname", dest="csvname", default="full_info.csv", help="Name of the csv filena", type=str)
     parser.add_argument("-i", "--imgfolder", dest="imgfolder", default="train", help="Folder where images is putted", type=str)
     parser.add_argument("-n", "--number", dest="number", default=500, help="How many elements for class to take", type=int)
     parser.add_argument("-r", "--ratio", dest="scaleratio", default=0.5, help="Scale ratio to reduce the dimension of the dataset", type=float)

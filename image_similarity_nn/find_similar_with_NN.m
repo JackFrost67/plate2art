@@ -27,26 +27,29 @@ function find_similar_with_NN(fn)
     %% search knn
     
     idx = knnsearch(ex_searcher_trained,features_img, 'K', 3);
-
-    img1 = readimage(imds,idx(1,1));
-    img2 = readimage(imds,idx(1,2));
-    img3 = readimage(imds,idx(1,3));
+    
+    name1 = imds.Files{idx(1,1), 1};
+    name2 = imds.Files{idx(1,2), 1};
+    name3 = imds.Files{idx(1,3), 1};
+    
+    txt = "";
+    txt = txt + name1 + "\n";
+    txt = txt + name2 + "\n";
+    txt = txt + name3 + "\n";
     
     %% save images
-     [pathstr,name,~] = fileparts(fn);
-     
-     filename = convertCharsToStrings(name) + '_sim_nn_1' + '.jpg';
-     new_fn = fullfile(pathstr, filename);
-     imwrite(img1, new_fn)
- 
-     filename = convertCharsToStrings(name) + '_sim_nn_2' + '.jpg';
-     new_fn = fullfile(pathstr, filename);
-     imwrite(img2, new_fn)
- 
-     filename = convertCharsToStrings(name) + '_sim_nn_3' + '.jpg';
-     new_fn = fullfile(pathstr, filename);
-     imwrite(img3, new_fn)
-    
+    [pathstr,name,~] = fileparts(fn);
+    %disp(name);
+    filename = convertCharsToStrings(name) + '_sim_nn' + '.txt';
+    new_fn = fullfile(pathstr, filename);
+    fid = fopen(new_fn,'wt');
+    fprintf(fid, txt);
+    fclose(fid);
+
+%     img1 = readimage(imds,idx(1,1));
+%     img2 = readimage(imds,idx(1,2));
+%     img3 = readimage(imds,idx(1,3));
+
     %figure(1)
     %imshow(img);
     
