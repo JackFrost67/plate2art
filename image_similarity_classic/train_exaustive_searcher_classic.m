@@ -10,6 +10,7 @@ featuresVector = zeros(nfiles, 92, 'double');
 
 delete(gcp('nocreate'));
 p = parpool();
+tic
 parfor i = 1 : nfiles 
     %fprintf("img: %d\n", i);
     name = imds.Files{i, 1};
@@ -17,7 +18,7 @@ parfor i = 1 : nfiles
     % extract features
     featuresVector(i, :) = extract_features_classic(image);
 end
-
+toc
 %% create model for searching knn
 ex_searcher_trained_classic = ExhaustiveSearcher(featuresVector, 'distance', 'cosine');
 save('ex_searcher_trained_classic.mat', 'ex_searcher_trained_classic');
