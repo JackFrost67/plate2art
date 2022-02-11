@@ -58,12 +58,12 @@ class TelegramBot:
             cur_dir = os.path.dirname(os.path.realpath(__file__))
             dir_mat = cur_dir + "/../image_similarity_nn/"
             matlab_cmd = 'matlab'
-            cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_NN(\'" + img_path + "\'); quit\""
+            cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_NN_crop(\'" + img_path + "\'); quit\""
             subprocess.call(cmd,shell=True)
-            self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale:")
+            self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale con crop:")
 
             dirName, fileBaseName, fileExtension = fileparts(img_path)
-            sim_nn_txt = os.path.join(dirName, fileBaseName + '_sim_nn' + '.txt')
+            sim_nn_txt = os.path.join(dirName, fileBaseName + '_sim_nn_crop' + '.txt')
 
             with open(sim_nn_txt) as f:
                 lines = f.readlines()
@@ -80,12 +80,12 @@ class TelegramBot:
             cur_dir = os.path.dirname(os.path.realpath(__file__))
             dir_mat = cur_dir + "/../image_similarity_nn/"
             matlab_cmd = 'matlab'
-            cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_NN(\'" + img_path + "\'); quit\""
+            cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_NN_resize(\'" + img_path + "\'); quit\""
             subprocess.call(cmd,shell=True)
-            self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale:")
+            self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale con resize:")
 
             dirName, fileBaseName, fileExtension = fileparts(img_path)
-            sim_nn_txt = os.path.join(dirName, fileBaseName + '_sim_nn' + '.txt')
+            sim_nn_txt = os.path.join(dirName, fileBaseName + '_sim_nn_resize' + '.txt')
 
             with open(sim_nn_txt) as f:
                 lines = f.readlines()

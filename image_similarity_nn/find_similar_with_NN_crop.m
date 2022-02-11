@@ -1,4 +1,4 @@
-function find_similar_with_NN(fn)
+function find_similar_with_NN_crop(fn)
     %% load img    
     img = imread(fn);   
     %% load NN, searcher and dataset
@@ -40,7 +40,7 @@ function find_similar_with_NN(fn)
     %% save images
     [pathstr,name,~] = fileparts(fn);
     %disp(name);
-    filename = convertCharsToStrings(name) + '_sim_nn' + '.txt';
+    filename = convertCharsToStrings(name) + '_sim_nn_crop' + '.txt';
     new_fn = fullfile(pathstr, filename);
     fid = fopen(new_fn,'wt');
     fprintf(fid, txt);
