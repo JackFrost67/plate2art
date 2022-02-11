@@ -40,42 +40,50 @@ def preprocessing():
     print(dest_folder)
     if not(os.path.exists(dest_folder)):
         os.mkdir(dest_folder)
+
+    if os.path.exists("img_db.csv"):
+            os.remove("img_db.csv")    
            
     with open("info.txt", "w") as info_file:
-        info_file.write("Code & Category\n")
-        for category in series.cat.categories:
-            filenames = [row[0] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
+        with open("img_db.csv", "w") as img_db_csv:
+            img_db_writer = csv.writer(img_db_csv)
+            info_file.write("Code & Category\n")
+            for category in series.cat.categories:
+                filenames = [row[0] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
+                titles = [row[2] for row in lines_list[1:] if row[3] == category and os.path.exists(os.path.join(path, row[0]))]
+                if (len(filenames) >= args.number):
+                    category_counter += 1
+                    category_list.append(category)
+                    info_file.write(str(category_counter) + "\t" + category + "\n")
+                    fix_index = 0 # add 1 if im.read throw an exception so we can remove it from the counted images
+                    for index, filename in enumerate(filenames):
+                        if os.path.exists(os.path.join(path, filename)) and index - fix_index < args.number:
+                            with open(os.path.join(path, filename), 'rb') as f:
+                                check_chars = f.read()[-2:]
+                                if (check_chars == b'\xff\xd9'):
+                                    im = cv2.imread(os.path.join(path, filename))
+                                    if im.shape[1] > 500 and im.shape[0] > 500:
+                                        width = int(args.scaleratio * im.shape[1])
+                                        height = int(args.scaleratio * im.shape[0])
+                                    elif im.shape[1] < 300 or im.shape[0] < 300:
+                                        width = int(im.shape[1]*1.5)
+                                        height = int(im.shape[0]*1.5)
+                                    else: 
+                                        width = im.shape[1]
+                                        height = im.shape[0]
+                                        
+                                    dim = (width, height)
+                                    renamed_path = current_directory + "/" + args.destination + "/" + str(category_counter) + "_" + str(index - fix_index) + ".jpg"
+                                    index_img = filenames.index(filename)
+                                    row = [renamed_path, titles[index_img]]
+                                    img_db_writer.writerow(row)
+                                    cv2.imwrite(renamed_path, cv2.resize(im, dim, interpolation=cv2.INTER_AREA))
+                                else:
+                                    fix_index += 1
+                        else:
+                            break
 
-            if (len(filenames) >= args.number):
-                category_counter += 1
-                category_list.append(category)
-                info_file.write(str(category_counter) + "\t" + category + "\n")
-                fix_index = 0 # add 1 if im.read throw an exception so we can remove it from the counted images
-                for index, filename in enumerate(filenames):
-                    if os.path.exists(os.path.join(path, filename)) and index - fix_index < args.number:
-                        with open(os.path.join(path, filename), 'rb') as f:
-                            check_chars = f.read()[-2:]
-                            if (check_chars == b'\xff\xd9'):
-                                im = cv2.imread(os.path.join(path, filename))
-                                if im.shape[1] > 500 and im.shape[0] > 500:
-                                    width = int(args.scaleratio * im.shape[1])
-                                    height = int(args.scaleratio * im.shape[0])
-                                elif im.shape[1] < 300 or im.shape[0] < 300:
-                                    width = int(im.shape[1]*1.5)
-                                    height = int(im.shape[0]*1.5)
-                                else: 
-                                    width = im.shape[1]
-                                    height = im.shape[0]
-                                    
-                                dim = (width, height)
-                                renamed_path = current_directory + "/" + args.destination + "/" + str(category_counter) + "_" + str(index - fix_index) + ".jpg"
-                                cv2.imwrite(renamed_path, cv2.resize(im, dim, interpolation=cv2.INTER_AREA))
-                            else:
-                                fix_index += 1
-                    else:
-                        break
-
-                counter.append(len(filenames))
+                    counter.append(len(filenames))
     
     if(args.plot_flag):
         fig, axs = plt.subplots()
