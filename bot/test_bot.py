@@ -8,6 +8,8 @@ import telepot
 import time
 import cv2
 
+import pandas as pd
+
 class Step(Enum):
     RECEIVE_IMAGE = 0
     FOOD_NOT_FOUND = 1
@@ -54,14 +56,21 @@ class TelegramBot:
         subprocess.call(cmd,shell=True)
         self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale:")
 
-        dirName, fileBaseName, fileExtension = fileparts(img_path)
-        img1 = os.path.join(dirName, fileBaseName + '_sim_nn_1' + '.jpg')
-        img2 = os.path.join(dirName, fileBaseName + '_sim_nn_2' + '.jpg')
-        img3 = os.path.join(dirName, fileBaseName + '_sim_nn_3' + '.jpg')
+        df = pd.read_csv('img_db.csv')
 
-        self.bot.sendPhoto(chat_id, photo=open(img1, 'rb'))
-        self.bot.sendPhoto(chat_id, photo=open(img2, 'rb'))
-        self.bot.sendPhoto(chat_id, photo=open(img3, 'rb'))
+        dirName, fileBaseName, fileExtension = fileparts(img_path)
+        sim_nn_txt = os.path.join(dirName, fileBaseName + '_sim_nn' + '.txt')
+
+        with open(sim_nn_txt) as f:
+            lines = f.readlines()
+        for line in lines: 
+            #print(line)
+            img_path = line.rstrip("\n")
+            img_f = (df.loc[df['filename'] == img_path])
+            artist = img_f['artist'].values[0]
+            title = img_f['title'].values[0]
+            caption_txt = title + ' - ' + artist
+            self.bot.sendPhoto(chat_id, photo=open(img_path, 'rb'), caption=caption_txt)
         #TODO aggiungere similarity classica
 
 

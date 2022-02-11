@@ -82,9 +82,10 @@ def preprocessing():
                                     dim = (width, height)
                                     renamed_path = current_directory + "/" + args.destination + "/" + str(category_counter) + "_" + str(index - fix_index) + ".jpg"
                                     index_img = filenames.index(filename)
-                                    row = [renamed_path, artists[index_img], titles[index_img], styles[index_img], genres[index_img], dates[index_img]]
+                                    other_path = "/home/fdila/repos/uni/plate2art/img/"+ str(category_counter) + "_" + str(index - fix_index) + ".jpg"
+                                    row = [other_path, artists[index_img], titles[index_img], styles[index_img], genres[index_img], dates[index_img]]
                                     img_db_writer.writerow(row)
-                                    cv2.imwrite(renamed_path, cv2.resize(im, dim, interpolation=cv2.INTER_AREA))
+                                    #cv2.imwrite(renamed_path, cv2.resize(im, dim, interpolation=cv2.INTER_AREA))
                                 else:
                                     fix_index += 1
                         else:
