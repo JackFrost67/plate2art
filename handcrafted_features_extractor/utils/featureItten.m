@@ -64,7 +64,7 @@ function mean = meanHue(H)
     mean_ = rad2deg(atan(B ./ A));
     
     if (isnan(mean_))
-        mean_ = 0;
+        mean = 0;
     else
         if(mean_ >= 0)
             mean = mean_;
