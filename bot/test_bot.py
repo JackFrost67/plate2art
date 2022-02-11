@@ -2,7 +2,7 @@ import os.path
 from enum import Enum
 from os import path
 from os.path import join
-import os, sys, platform, subprocess
+import os, sys, subprocess
 
 import telepot
 import time
@@ -15,6 +15,7 @@ class Step(Enum):
     FOOD_NOT_FOUND = 1
     IMG_QUALITY = 2
     QUALITY_BAD = 3
+    SIMILARITY = 4
 
 def fileparts(fn):
     (dirName, fileName) = os.path.split(fn)
@@ -48,56 +49,79 @@ class TelegramBot:
             quality_txt = f.read()
         return quality_txt
     
-    def get_similar_images(self, img_path, chat_id):
+    def get_similar_images(self, img_path, chat_id, choice):
 
         df = pd.read_csv('img_db.csv')
 
-        ## Similarity con NN
-        cur_dir = os.path.dirname(os.path.realpath(__file__))
-        dir_mat = cur_dir + "/../image_similarity_nn/"
-        matlab_cmd = 'matlab'
-        cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_NN(\'" + img_path + "\'); quit\""
-        subprocess.call(cmd,shell=True)
-        self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale:")
+        if choice == 1:
+            ## Similarity con NN
+            cur_dir = os.path.dirname(os.path.realpath(__file__))
+            dir_mat = cur_dir + "/../image_similarity_nn/"
+            matlab_cmd = 'matlab'
+            cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_NN(\'" + img_path + "\'); quit\""
+            subprocess.call(cmd,shell=True)
+            self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale:")
 
-        dirName, fileBaseName, fileExtension = fileparts(img_path)
-        sim_nn_txt = os.path.join(dirName, fileBaseName + '_sim_nn' + '.txt')
+            dirName, fileBaseName, fileExtension = fileparts(img_path)
+            sim_nn_txt = os.path.join(dirName, fileBaseName + '_sim_nn' + '.txt')
 
-        with open(sim_nn_txt) as f:
-            lines = f.readlines()
-        for line in lines: 
-            #print(line)
-            img_path = line.rstrip("\n")
-            img_f = (df.loc[df['filename'] == img_path])
-            artist = img_f['artist'].values[0]
-            title = img_f['title'].values[0]
-            caption_txt = title + ' - ' + artist
-            self.bot.sendPhoto(chat_id, photo=open(img_path, 'rb'), caption=caption_txt)
+            with open(sim_nn_txt) as f:
+                lines = f.readlines()
+            for line in lines: 
+                #print(line)
+                img_path = line.rstrip("\n")
+                img_f = (df.loc[df['filename'] == img_path])
+                artist = img_f['artist'].values[0]
+                title = img_f['title'].values[0]
+                caption_txt = title + ' - ' + artist
+                self.bot.sendPhoto(chat_id, photo=open(img_path, 'rb'), caption=caption_txt)
+        elif choice == 2:
+            ## Similarity con NN
+            cur_dir = os.path.dirname(os.path.realpath(__file__))
+            dir_mat = cur_dir + "/../image_similarity_nn/"
+            matlab_cmd = 'matlab'
+            cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_NN(\'" + img_path + "\'); quit\""
+            subprocess.call(cmd,shell=True)
+            self.bot.sendMessage(chat_id, "Migliori quadri trovati con la rete neurale:")
 
-        ## Similarity con metriche classiche
-        cur_dir = os.path.dirname(os.path.realpath(__file__))
-        dir_mat = cur_dir + "/../image_similarity_classic/"
-        matlab_cmd = 'matlab'
-        cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_classic(\'" + img_path + "\'); quit\""
-        subprocess.call(cmd,shell=True)
-        self.bot.sendMessage(chat_id, "Migliori quadri trovati con metriche classiche:")
+            dirName, fileBaseName, fileExtension = fileparts(img_path)
+            sim_nn_txt = os.path.join(dirName, fileBaseName + '_sim_nn' + '.txt')
 
-        dirName, fileBaseName, fileExtension = fileparts(img_path)
-        sim_classic_txt = os.path.join(dirName, fileBaseName + '_sim_classic' + '.txt')
+            with open(sim_nn_txt) as f:
+                lines = f.readlines()
+            for line in lines: 
+                #print(line)
+                img_path = line.rstrip("\n")
+                img_f = (df.loc[df['filename'] == img_path])
+                artist = img_f['artist'].values[0]
+                title = img_f['title'].values[0]
+                caption_txt = title + ' - ' + artist
+                self.bot.sendPhoto(chat_id, photo=open(img_path, 'rb'), caption=caption_txt)
+        elif choice == 3:
+            ## Similarity con metriche classiche
+            cur_dir = os.path.dirname(os.path.realpath(__file__))
+            dir_mat = cur_dir + "/../image_similarity_classic/"
+            matlab_cmd = 'matlab'
+            cmd = matlab_cmd + " -nodesktop -nosplash -nodisplay -wait -r \"addpath(\'" + dir_mat + "\'); find_similar_with_classic(\'" + img_path + "\'); quit\""
+            subprocess.call(cmd,shell=True)
+            self.bot.sendMessage(chat_id, "Migliori quadri trovati con metriche classiche:")
 
-        with open(sim_classic_txt) as f:
-            lines = f.readlines()
-        for line in lines: 
-            #print(line)
-            img_path = line.rstrip("\n")
-            img_f = (df.loc[df['filename'] == img_path])
-            artist = img_f['artist'].values[0]
-            title = img_f['title'].values[0]
-            caption_txt = title + ' - ' + artist
-            self.bot.sendPhoto(chat_id, photo=open(img_path, 'rb'), caption=caption_txt)
+            dirName, fileBaseName, fileExtension = fileparts(img_path)
+            sim_classic_txt = os.path.join(dirName, fileBaseName + '_sim_classic' + '.txt')
+            
+            with open(sim_classic_txt) as f:
+                lines = f.readlines()
+            for line in lines: 
+                #print(line)
+                img_path = line.rstrip("\n")
+                img_f = (df.loc[df['filename'] == img_path])
+                artist = img_f['artist'].values[0]
+                title = img_f['title'].values[0]
+                caption_txt = title + ' - ' + artist
+                self.bot.sendPhoto(chat_id, photo=open(img_path, 'rb'), caption=caption_txt)
         
     def on_chat_message(self, msg):
-        content_type, chat_type, chat_id = telepot.glance(msg)  # get dei parametri della conversazione e del tipo di messaggio
+        content_type, chat_type, chat_id = telepot.glance(msg)
 
         img_name = 'tmp/img' + str(chat_id) + '.jpg'
         if self.step == Step.RECEIVE_IMAGE:
@@ -128,9 +152,8 @@ class TelegramBot:
                         self.step = Step.QUALITY_BAD
                         return
                     else:
-                        self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
-                        self.get_similar_images(img_name, chat_id)
-                        self.step = Step.RECEIVE_IMAGE
+                        self.bot.sendMessage(chat_id, "Che similarity vuoi usare? Rete neurale con crop, Rete neurale con resize o Metodi handcrafted? \n/1\n/2\n/3")
+                        self.step = Step.SIMILARITY
                         return
                 else:
                     self.bot.sendMessage(chat_id, "Cibo non trovato, continuare?\n/Si\n/No")
@@ -153,9 +176,8 @@ class TelegramBot:
                         self.step = Step.QUALITY_BAD
                         return
                     else:
-                        self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
-                        self.get_similar_images(img_name, chat_id)
-                        self.step = Step.RECEIVE_IMAGE
+                        self.bot.sendMessage(chat_id, "Che similarity vuoi usare? Rete neurale con crop, Rete neurale con resize o Metodi handcrafted? \n/1\n/2\n/3")
+                        self.step = Step.SIMILARITY
                         return
                 elif txt == '/No':
                     self.bot.sendMessage(chat_id, 'Mi dispiace, riprova con un\'altra foto')
@@ -169,9 +191,8 @@ class TelegramBot:
                 name = msg["from"]["first_name"]
                 txt = msg['text']
                 if txt == '/Si':
-                    self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
-                    self.get_similar_images(img_name, chat_id)
-                    self.step = Step.RECEIVE_IMAGE
+                    self.bot.sendMessage(chat_id, "Che similarity vuoi usare? Rete neurale con crop, Rete neurale con resize o Metodi handcrafted? \n/1\n/2\n/3")
+                    self.step = Step.SIMILARITY
                     return
                 elif txt == '/No':
                     self.bot.sendMessage(chat_id, 'Mi dispiace, riprova con un\'altra foto')
@@ -179,6 +200,25 @@ class TelegramBot:
                     return
                 else:
                     self.bot.sendMessage(chat_id, 'Input non valido, riprovare.\n/Si\n/No')
+                    return
+        if self.step == Step.SIMILARITY:
+            if content_type == 'text':
+                name = msg["from"]["first_name"]
+                txt = msg['text']
+                if txt == '/1':
+                    self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
+                    self.get_similar_images(img_name, chat_id,1)
+                    self.step = Step.RECEIVE_IMAGE
+                elif txt == '/2':
+                    self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
+                    self.get_similar_images(img_name, chat_id,2)
+                    self.step = Step.RECEIVE_IMAGE
+                elif txt == '/3':
+                    self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
+                    self.get_similar_images(img_name, chat_id,3)
+                    self.step = Step.RECEIVE_IMAGE
+                else:
+                    self.bot.sendMessage(chat_id, 'Input non valido, riprovare.\n/1\n/2\n/3')
                     return
 
     @staticmethod

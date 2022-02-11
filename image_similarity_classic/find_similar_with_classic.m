@@ -27,6 +27,7 @@ function find_similar_with_classic(fn)
     fid = fopen(new_fn,'wt');
     fprintf(fid, txt);
     fclose(fid);
+    disp(filename)
     %%
 %     img1 = readimage(imds, idx(1,1));
 %     img2 = readimage(imds, idx(1,2));
