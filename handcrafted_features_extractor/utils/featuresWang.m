@@ -30,18 +30,18 @@ veryLight = (U == 5);
 
 warms = (image(:,3) >= 0 & image(:,3) < 140) | ...
         (image(:,3) >= 320 & image(:,3) < 360);
-cool = image(:,3) >= 140 & image(:,3) < 320;
+cold = image(:,3) >= 140 & image(:,3) < 320;
 
 features(1) = sum(veryDark & warms);
-features(2) = sum(veryDark & cool);
+features(2) = sum(veryDark & cold);
 features(3) = sum(dark & warms);
-features(4) = sum(dark & cool);
+features(4) = sum(dark & cold);
 features(5) = sum(middle & warms);
-features(6) = sum(middle & cool);
+features(6) = sum(middle & cold);
 features(7) = sum(light & warms);
-features(8) = sum(light & cool);
+features(8) = sum(light & cold);
 features(9) = sum(veryLight & warms);
-features(10) = sum(veryLight & cool);
+features(10) = sum(veryLight & cold);
 
 % Factor 2 (7)
 areaS1 = image(:,2) < (10);
@@ -56,11 +56,11 @@ MiddleS = areaS3 .* (image(:,2) - 10) ./ 17 + areaS4 .* (51 - image(:,2)) ./ 24;
 HighS = areaS5 .* (image(:,2) - 27) ./ 24 + areaS6;
 
 features(11) = sum(warms & HighS);
-features(12) = sum(cool & HighS);
+features(12) = sum(cold & HighS);
 features(13) = sum(warms & MiddleS);
-features(14) = sum(cool & MiddleS);
+features(14) = sum(cold & MiddleS);
 features(15) = sum(warms & LowS);
-features(16) = sum(cool & LowS);
+features(16) = sum(cold & LowS);
 
 meanLabImg = mean(labimg(:,2:3), 1);
 meanLabImg = repmat(meanLabImg, [rows*cols, 1]);
@@ -87,7 +87,7 @@ features(22) = sum(middle) / totalPixels;
 features(23) = sum(light) / totalPixels;
 features(24) = sum(veryLight) / totalPixels;
 features(25) = sum(warms) / totalPixels;
-features(26) = sum(cool) / totalPixels;
+features(26) = sum(cold) / totalPixels;
 features(27) = sum(HighS) / totalPixels;
 features(28) = sum(MiddleS) / totalPixels;
 features(29) = sum(LowS) / totalPixels;
