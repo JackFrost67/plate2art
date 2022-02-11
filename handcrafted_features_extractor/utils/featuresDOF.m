@@ -24,10 +24,16 @@ for x = 2:3
         [cH, sH] = wavedec2(blockOfH, 3, 'db1');
         
         [hH, vH, dH] = detcoef2('all', cH, sH, 3);
-        fH_ = fH_ + (sum(hH, 'all') + sum(vH, 'all') + sum(dH, 'all')) / (numel(hH) + numel(vH) + numel(dH));
+        fH_ = fH_ + (sum(hH, 'all', 'omitnan') + sum(vH, 'all', 'omitnan') + sum(dH, 'all', 'omitnan'))...
+            / (numel(hH) + numel(vH) + numel(dH));
     end
 end
-DOF = [fH_/waveletFeatures(3)];
+%wavelet of H is 0 if is a grayimage
+if(waveletFeatures(3) == 0)
+    DOF = [0];
+else
+    DOF = [fH_/waveletFeatures(3)];
+end
 
 fS_ = 0;
 for x = 2:3
@@ -36,10 +42,17 @@ for x = 2:3
         [cS, sS] = wavedec2(blockOfS, 3, 'db1');
         
         [hS, vS, dS] = detcoef2('all', cS, sS, 3);
-        fS_ = fS_ + (sum(hS, 'all') + sum(vS, 'all') + sum(dS, 'all')) / (numel(hS) + numel(vS) + numel(dS));
+        fS_ = fS_ + (sum(hS, 'all', 'omitnan') + sum(vS, 'all', 'omitnan') + sum(dS, 'all', 'omitnan'))...
+            / (numel(hS) + numel(vS) + numel(dS));
     end
 end
-DOF = [DOF fS_/waveletFeatures(7)];
+%wavelet of S is 0 if is a grayimage
+if(waveletFeatures(7) == 0)
+    DOF = [DOF 0];
+else
+    DOF = [DOF fS_/waveletFeatures(7)];
+end
+
 
 fL_ = 0;
 for x = 2:3
@@ -48,9 +61,18 @@ for x = 2:3
         [cL, sL] = wavedec2(blockOfL, 3, 'db1');
         
         [hL, vL, dL] = detcoef2('all', cL, sL, 3);
-        fL_ = fL_+ (sum(hL, 'all') + sum(vL, 'all') + sum(dL, 'all')) / (numel(hL) + numel(vL) + numel(dL));
+        fL_ = fL_+ (sum(hL, 'all', 'omitnan') + sum(vL, 'all', 'omitnan') + sum(dL, 'all', 'omitnan'))...
+            / (numel(hL) + numel(vL) + numel(dL));
     end
 end
-DOF = [DOF fS_/waveletFeatures(11)];
+
+
+%wavelet grayimage
+if(waveletFeatures(11) == 0)
+    DOF = [DOF 0];
+else
+    DOF = [DOF fL_/waveletFeatures(11)];
+end
+
 end
 
