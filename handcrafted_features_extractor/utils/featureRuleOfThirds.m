@@ -18,5 +18,10 @@ function mean = meanHue(H)
     % mean of HUE
     A = sum(cos(H), 'all', 'omitnan');
     B = sum(sin(H), 'all', 'omitnan');
+       
     mean = rad2deg(atan(B ./ A));
+    
+    if (isnan(mean))
+      mean = 0;
+    end
 end

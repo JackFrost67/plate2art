@@ -11,7 +11,11 @@ function [mean, angularDispersion, meanW, angularDispersionW] = featureHue(H, S)
     %% saturation weighted mean of HUE
     As = sum(S .* cos(H), 'all', 'omitnan');
     Bs = sum(S .* sin(H), 'all', 'omitnan');
-    meanW = rad2deg(atan(Bs ./ As));
+    if nnz(S)
+        meanW = rad2deg(atan(Bs ./ As));
+    else
+        meanW = 0;
+    end
     
     %% angular dispersion of HUE 
     n = size(H, 1) * size(H, 2);

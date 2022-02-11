@@ -11,7 +11,7 @@ function featureDynamicsVector = featureDynamics(image)
     houghPeaks = houghpeaks(SHT, 25, 'threshold', ceil(0.3 * max(SHT(:))));
     
     %% finding the hough line
-    houghLines = houghlines(bwImage, theta ,rho, houghPeaks);
+    houghLines = houghlines(bwImage, theta, rho, houghPeaks);
     
     %% classification for each line
     staticLines = [];
@@ -24,7 +24,7 @@ function featureDynamicsVector = featureDynamics(image)
         end
     end
     
-    %%
+    %% statistics about static lines
     len = [];
     staticTheta = [];
     for i = 1 : length(staticLines)
@@ -32,14 +32,16 @@ function featureDynamicsVector = featureDynamics(image)
         len = [len len_];
         staticTheta = [staticTheta staticLines(i).theta];
     end
-    slopeStaticLines = sum((len ./ sum(len)) .* staticTheta);
+    
     if ~isempty(len)
+        slopeStaticLines = sum((len ./ sum(len)) .* staticTheta);
         meanLenStaticLines = mean(len);
     else 
+        slopeStaticLines = 0;
         meanLenStaticLines = 0;
     end
     
-    %%
+    %% statistics about dynamics lines
     len = [];
     dynamicTheta = [];
     for i = 1 : length(dynamicLines)
@@ -47,10 +49,12 @@ function featureDynamicsVector = featureDynamics(image)
         len = [len len_];
         dynamicTheta = [dynamicTheta dynamicLines(i).theta];
     end
-    slopeDynamicLines = sum((len ./ sum(len)) .* dynamicTheta);
+    
     if ~isempty(len)
+        slopeDynamicLines = sum((len ./ sum(len)) .* dynamicTheta);
         meanLendynamicLines = mean(len);
     else 
+        slopeDynamicLines = 0;
         meanLendynamicLines = 0;
     end
     

@@ -3,17 +3,17 @@ function amountOfColors = featuresColorNames(image)
 load('w2c.mat');
 
 %resize the image for computional efficency reason
-[rows, cols, ~]=size(image);
+[rows, cols, ~] = size(image);
 maxRowCol = max(rows, cols);
-image = imresize(image, 1/ceil(maxRowCol/500));
+image = imresize(image, 1 / ceil(maxRowCol / 500));
 
 %compute total pixels
-[rows, cols, ~]=size(image);
+[rows, cols, ~] = size(image);
 totalPixels = rows * cols;
 
 % first example
 im = double(image);       % load test image
-colorImage = uint8(im2c(im,w2c,-1));
+colorImage = uint8(im2c(im, w2c, -1));
 
 % order of color names: black ,   blue   , brown       , grey       , green   , orange   , pink     , purple  , red     , white    , yellow
 % color_values = {[0 0 0] , [0 0 1] , [.5 .4 .25] , [.5 .5 .5] , [0 1 0] , [1 .8 0] , [1 .5 1] , [1 0 1] , [1 0 0] , [1 1 1 ] , [ 1 1 0 ] };

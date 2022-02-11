@@ -3,7 +3,6 @@ function DOF = featuresDOF(H, S, L,waveletFeatures)
 %waveletFeatures(3, 7, 11) contengono le wavelet livelli 3 su tutta 
 %l'immagine, rispettivamente di H, S, V
 
-
 [rows, cols] = size(H);
 
 %definisco le righe iniziali e finali dei quattro blocchi centrali

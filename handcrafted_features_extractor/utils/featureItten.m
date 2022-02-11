@@ -27,8 +27,13 @@ function contranstFeatureVector = featureItten(image)
         sMean_ = [sMean_, mean2(s_(s_ > 0))];
         lMean_ = [lMean_, mean2(l_(l_ > 0))];    
         
-        contrastOfBrightness = contrastOfBrightness + ((1 / nnz(l_)) * std2(l_(l_ > 0)));
-        contrastOfSaturation = contrastOfSaturation + ((1 / nnz(s_)) * std2(s_(s_ > 0)));
+        if nnz(l_)
+            contrastOfBrightness = contrastOfBrightness + ((1 / nnz(l_)) * std2(l_(l_ > 0)));
+        end
+        
+        if nnz(s_)
+            contrastOfSaturation = contrastOfSaturation + ((1 / nnz(s_)) * std2(s_(s_ > 0)));
+        end
     end
     
     %% Mapping Hue mean of each region to Itten hues    
@@ -60,12 +65,12 @@ function mean = meanHue(H)
     
     if (isnan(mean_))
         mean_ = 0;
-    end
-    
-    if(mean_ >= 0)
-        mean = mean_;
     else
-        mean = 360 + mean_;
+        if(mean_ >= 0)
+            mean = mean_;
+        else
+            mean = 360 + mean_;
+        end
     end
 end
 
