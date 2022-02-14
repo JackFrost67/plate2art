@@ -6,7 +6,6 @@ import os, sys, subprocess
 
 import telepot
 import time
-import cv2
 
 import pandas as pd
 
@@ -29,7 +28,7 @@ class TelegramBot:
     def __init__(self):
         # Bot
         self.bot = TelegramBot.init_bot()
-        self.step = Step.RECEIVE_IMAGE
+        self.steps = {}
 
     def start_main_loop(self):
         # Start mainloop
@@ -123,8 +122,15 @@ class TelegramBot:
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
 
+        mykeys = self.steps.keys()
+        if chat_id in mykeys:
+            chat_step = self.steps[chat_id]
+        else:
+            self.steps.update({chat_id: Step.RECEIVE_IMAGE})
+            chat_step = Step.RECEIVE_IMAGE
+
         img_name = 'tmp/img' + str(chat_id) + '.jpg'
-        if self.step == Step.RECEIVE_IMAGE:
+        if chat_step == Step.RECEIVE_IMAGE:
             if content_type == 'text':
                 name = msg["from"]["first_name"]
                 txt = msg['text']
@@ -133,7 +139,6 @@ class TelegramBot:
 
             if content_type == 'photo':
                 self.bot.download_file(msg['photo'][-1]['file_id'], img_name)
-                img = cv2.imread(img_name)
 
                 self.bot.sendMessage(chat_id, 'Sto cercando il cibo...')
                 sys.path.append('../segmentation')
@@ -149,18 +154,18 @@ class TelegramBot:
                     if ("too bright" in txt_quality or "too dark" in txt_quality
                         or "Poor" in txt_quality or "Bad" in txt_quality):
                         self.bot.sendMessage(chat_id, "Rilevata scarsa qualità, continuare?\n/Si\n/No")
-                        self.step = Step.QUALITY_BAD
+                        self.steps.update({chat_id: Step.QUALITY_BAD})
                         return
                     else:
                         self.bot.sendMessage(chat_id, "Che similarity vuoi usare? Rete neurale con crop, Rete neurale con resize o Metodi handcrafted? \n/1\n/2\n/3")
-                        self.step = Step.SIMILARITY
+                        self.steps.update({chat_id: Step.SIMILARITY})
                         return
                 else:
                     self.bot.sendMessage(chat_id, "Cibo non trovato, continuare?\n/Si\n/No")
-                    self.step = Step.FOOD_NOT_FOUND
+                    self.steps.update({chat_id: Step.FOOD_NOT_FOUND})
                     return
 
-        if self.step == Step.FOOD_NOT_FOUND:
+        if chat_step == Step.FOOD_NOT_FOUND:
             if content_type == 'text':
                 name = msg["from"]["first_name"]
                 txt = msg['text']
@@ -173,50 +178,50 @@ class TelegramBot:
                     if ("too bright" in txt_quality or "too dark" in txt_quality
                         or "Poor" in txt_quality or "Bad" in txt_quality):
                         self.bot.sendMessage(chat_id, "Rilevata scarsa qualità, continuare?\n/Si\n/No")
-                        self.step = Step.QUALITY_BAD
+                        self.steps.update({chat_id: Step.QUALITY_BAD})
                         return
                     else:
                         self.bot.sendMessage(chat_id, "Che similarity vuoi usare? Rete neurale con crop, Rete neurale con resize o Metodi handcrafted? \n/1\n/2\n/3")
-                        self.step = Step.SIMILARITY
+                        self.steps.update({chat_id: Step.SIMILARITY})
                         return
                 elif txt == '/No':
                     self.bot.sendMessage(chat_id, 'Mi dispiace, riprova con un\'altra foto')
-                    self.step = Step.RECEIVE_IMAGE
+                    self.steps.update({chat_id: Step.RECEIVE_IMAGE})
                     return
                 else:
                     self.bot.sendMessage(chat_id, 'Input non valido, riprovare.\n/Si\n/No')
                     return
-        if self.step == Step.QUALITY_BAD:
+        if chat_step == Step.QUALITY_BAD:
             if content_type == 'text':
                 name = msg["from"]["first_name"]
                 txt = msg['text']
                 if txt == '/Si':
                     self.bot.sendMessage(chat_id, "Che similarity vuoi usare? Rete neurale con crop, Rete neurale con resize o Metodi handcrafted? \n/1\n/2\n/3")
-                    self.step = Step.SIMILARITY
+                    self.steps.update({chat_id: Step.SIMILARITY})
                     return
                 elif txt == '/No':
                     self.bot.sendMessage(chat_id, 'Mi dispiace, riprova con un\'altra foto')
-                    self.step = Step.RECEIVE_IMAGE
+                    self.steps.update({chat_id: Step.RECEIVE_IMAGE})
                     return
                 else:
                     self.bot.sendMessage(chat_id, 'Input non valido, riprovare.\n/Si\n/No')
                     return
-        if self.step == Step.SIMILARITY:
+        if chat_step == Step.SIMILARITY:
             if content_type == 'text':
                 name = msg["from"]["first_name"]
                 txt = msg['text']
                 if txt == '/1':
                     self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
                     self.get_similar_images(img_name, chat_id,1)
-                    self.step = Step.RECEIVE_IMAGE
+                    self.steps.update({chat_id: Step.RECEIVE_IMAGE})
                 elif txt == '/2':
                     self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
                     self.get_similar_images(img_name, chat_id,2)
-                    self.step = Step.RECEIVE_IMAGE
+                    self.steps.update({chat_id: Step.RECEIVE_IMAGE})
                 elif txt == '/3':
                     self.bot.sendMessage(chat_id, "Ok, cerco i quadri migliori...")
                     self.get_similar_images(img_name, chat_id,3)
-                    self.step = Step.RECEIVE_IMAGE
+                    self.steps.update({chat_id: Step.RECEIVE_IMAGE})
                 else:
                     self.bot.sendMessage(chat_id, 'Input non valido, riprovare.\n/1\n/2\n/3')
                     return
@@ -231,5 +236,4 @@ bot = TelegramBot()
 bot.start_main_loop()
 
 while 1:
-    time.sleep(10)
-
+    time.sleep(5)
